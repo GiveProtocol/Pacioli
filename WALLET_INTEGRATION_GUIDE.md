@@ -5,6 +5,7 @@
 ### 1. Core Services (Production-Ready)
 
 #### **Wallet Service** (`src/services/wallet/`)
+
 - **walletService.ts**: Complete wallet detection and connection system
   - Detects Polkadot.js, Talisman, SubWallet, and MetaMask
   - Handles connection to Substrate and EVM wallets
@@ -12,6 +13,7 @@
   - Supports account change subscriptions
 
 **Usage Example:**
+
 ```typescript
 import { walletService } from '@/services/wallet/walletService'
 import { WalletType } from '@/services/wallet/types'
@@ -20,17 +22,20 @@ import { WalletType } from '@/services/wallet/types'
 const wallets = await walletService.detectWallets()
 
 // Connect to Polkadot.js
-const wallet = await walletService.connectSubstrateWallet(WalletType.POLKADOT_JS)
+const wallet = await walletService.connectSubstrateWallet(
+  WalletType.POLKADOT_JS
+)
 console.log('Connected accounts:', wallet.accounts)
 
 // Subscribe to account changes
 const unsubscribe = walletService.subscribeToAccounts(
   WalletType.POLKADOT_JS,
-  (accounts) => console.log('Accounts changed:', accounts)
+  accounts => console.log('Accounts changed:', accounts)
 )
 ```
 
 #### **Polkadot Blockchain Service** (`src/services/blockchain/`)
+
 - **polkadotService.ts**: Complete Polkadot/Kusama connection and transaction fetching
   - Connects to relay chains with automatic endpoint failover
   - Fetches complete transaction history for addresses
@@ -39,6 +44,7 @@ const unsubscribe = walletService.subscribeToAccounts(
   - Efficient batched RPC calls (100 blocks per batch)
 
 **Usage Example:**
+
 ```typescript
 import { polkadotService } from '@/services/blockchain/polkadotService'
 import { NetworkType } from '@/services/wallet/types'
@@ -65,11 +71,12 @@ const balance = await polkadotService.getBalance(
 // Subscribe to new blocks
 const unsubscribe = await polkadotService.subscribeNewBlocks(
   NetworkType.POLKADOT,
-  (header) => console.log('New block:', header.number.toNumber())
+  header => console.log('New block:', header.number.toNumber())
 )
 ```
 
 #### **Storage Service** (`src/services/database/`)
+
 - **storageService.ts**: LocalStorage wrapper for wallet and transaction data
   - Saves/loads connected wallets
   - Persists transaction history
@@ -77,6 +84,7 @@ const unsubscribe = await polkadotService.subscribeNewBlocks(
   - Automatic deduplication
 
 **Usage Example:**
+
 ```typescript
 import { storageService } from '@/services/database/storageService'
 
@@ -97,6 +105,7 @@ storageService.saveSyncStatus({
 ```
 
 ### 2. Type Definitions
+
 - **types.ts**: Comprehensive TypeScript interfaces
   - `WalletAccount`, `ConnectedWallet`, `NetworkConfig`
   - `SubstrateTransaction`, `EVMTransaction`
@@ -107,6 +116,7 @@ storageService.saveSyncStatus({
 ### Step 1: Create React Components
 
 #### A. WalletConnector Component
+
 Create `src/components/wallet/WalletConnector.tsx`:
 
 ```typescript
@@ -166,6 +176,7 @@ export const WalletConnector: React.FC = () => {
 ```
 
 #### B. TransactionList Component
+
 Create `src/components/wallet/TransactionList.tsx`:
 
 ```typescript
@@ -229,6 +240,7 @@ export const TransactionList: React.FC<Props> = ({ transactions, isLoading }) =>
 ```
 
 ### Step 2: Create Wallets Page
+
 Create `src/app/wallets/WalletManager.tsx`:
 
 ```typescript
@@ -295,6 +307,7 @@ export const WalletManager: React.FC = () => {
 ```
 
 ### Step 3: Add Route
+
 Update `src/App.tsx`:
 
 ```typescript
@@ -305,6 +318,7 @@ const WalletManager = React.lazy(() => import('./app/wallets/WalletManager'))
 ```
 
 ### Step 4: Test
+
 1. Install browser extension (Polkadot.js, Talisman, or SubWallet)
 2. Navigate to `/wallet-manager`
 3. Click "Connect" button
@@ -315,11 +329,13 @@ const WalletManager = React.lazy(() => import('./app/wallets/WalletManager'))
 ## 🔧 Performance Optimization
 
 ### Current Implementation
+
 - Batches 100 blocks per RPC call
 - Deduplicates transactions automatically
 - Caches connection instances
 
 ### Recommended Improvements
+
 1. **IndexedDB Migration**: Replace localStorage with IndexedDB for 10k+ transactions
 2. **Background Workers**: Move transaction fetching to Web Workers
 3. **Pagination**: Implement virtual scrolling for transaction lists
@@ -328,24 +344,28 @@ const WalletManager = React.lazy(() => import('./app/wallets/WalletManager'))
 ## 📈 Next Phases
 
 ### Phase 2: Multi-Chain Support (3-4 weeks)
+
 - Add parachain connections (Moonbeam, Astar, Acala)
 - Implement EVM transaction fetching
 - Unified transaction schema
 - Chain-specific transaction parsers
 
 ### Phase 3: XCM Tracking (2-3 weeks)
+
 - XCM message correlation
 - Multi-hop transfer tracking
 - Complete fee calculation
 - Cross-chain balance reconciliation
 
 ### Phase 4: Real-Time Monitoring (2 weeks)
+
 - WebSocket subscriptions for all chains
 - Real-time balance updates
 - Transaction notifications
 - Connection health monitoring
 
 ### Phase 5: Advanced Features (3-4 weeks)
+
 - Staking rewards tracking
 - Governance participation
 - DeFi protocol integration

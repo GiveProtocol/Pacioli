@@ -22,6 +22,7 @@ Instead, please report them via one of the following methods:
 #### 1. GitHub Security Advisories (Preferred)
 
 Report vulnerabilities privately through GitHub Security Advisories:
+
 1. Go to https://github.com/GiveProtocol/Pacioli/security/advisories
 2. Click "Report a vulnerability"
 3. Fill out the form with details about the vulnerability
@@ -58,6 +59,7 @@ After you submit a vulnerability report, we will:
 ### Bug Bounty Program
 
 At this time, Pacioli does not have a paid bug bounty program. However:
+
 - We deeply appreciate security researchers' contributions
 - Significant findings will be acknowledged in our security advisories
 - We're exploring options for a bug bounty program in the future
@@ -162,7 +164,7 @@ We perform regular security testing including:
 5. **Day 21**: Security update released with advisory
 6. **Day 90**: Full technical details published (if applicable)
 
-*Timeline may vary based on vulnerability complexity*
+_Timeline may vary based on vulnerability complexity_
 
 ## Security Hall of Fame
 
@@ -170,16 +172,18 @@ We'd like to thank the following security researchers for responsibly disclosing
 
 <!-- Security researchers will be listed here after verified disclosures -->
 
-*No vulnerabilities reported yet - be the first to help secure Pacioli!*
+_No vulnerabilities reported yet - be the first to help secure Pacioli!_
 
 ## Contact
 
 For security-related inquiries:
+
 - **Email**: security@pacioli.io
 - **GPG Key**: [Coming soon]
 - **GitHub Security**: https://github.com/GiveProtocol/Pacioli/security
 
 For non-security issues, please use:
+
 - **General Support**: support@pacioli.io
 - **GitHub Issues**: https://github.com/GiveProtocol/Pacioli/issues
 

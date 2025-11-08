@@ -7,7 +7,11 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { formatBalance } from '@polkadot/util'
 import type { Header } from '@polkadot/types/interfaces'
-import type { NetworkConfig, SubstrateTransaction, NetworkType } from '../wallet/types'
+import type {
+  NetworkConfig,
+  SubstrateTransaction,
+  NetworkType,
+} from '../wallet/types'
 import { ChainType } from '../wallet/types'
 import { subscanService } from './subscanService'
 
@@ -86,7 +90,10 @@ class PolkadotService {
         await Promise.race([
           api.isReady,
           new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Connection timeout after 10 seconds')), 10000)
+            setTimeout(
+              () => reject(new Error('Connection timeout after 10 seconds')),
+              10000
+            )
           ),
         ])
 
@@ -102,8 +109,12 @@ class PolkadotService {
         let ss58Format = 42 // default
         try {
           const ss58Value = properties.ss58Format.unwrapOr(42)
-          ss58Format = typeof ss58Value === 'number' ? ss58Value :
-                       ss58Value.toNumber ? ss58Value.toNumber() : 42
+          ss58Format =
+            typeof ss58Value === 'number'
+              ? ss58Value
+              : ss58Value.toNumber
+                ? ss58Value.toNumber()
+                : 42
         } catch (error) {
           console.warn('Could not get ss58Format, using default:', error)
         }
@@ -112,10 +123,16 @@ class PolkadotService {
         let tokenDecimals = 18 // default for EVM chains
         try {
           const decimalsValue = properties.tokenDecimals.unwrapOr([18])
-          const decimalsArray = Array.isArray(decimalsValue) ? decimalsValue : [decimalsValue]
+          const decimalsArray = Array.isArray(decimalsValue)
+            ? decimalsValue
+            : [decimalsValue]
           const firstDecimal = decimalsArray[0]
-          tokenDecimals = typeof firstDecimal === 'number' ? firstDecimal :
-                         firstDecimal.toNumber ? firstDecimal.toNumber() : 18
+          tokenDecimals =
+            typeof firstDecimal === 'number'
+              ? firstDecimal
+              : firstDecimal.toNumber
+                ? firstDecimal.toNumber()
+                : 18
         } catch (error) {
           console.warn('Could not get tokenDecimals, using default:', error)
         }
@@ -124,13 +141,17 @@ class PolkadotService {
         let tokenSymbol = 'UNIT' // default
         try {
           const symbolValue = properties.tokenSymbol.unwrapOr(['UNIT'])
-          const symbolArray = Array.isArray(symbolValue) ? symbolValue : [symbolValue]
+          const symbolArray = Array.isArray(symbolValue)
+            ? symbolValue
+            : [symbolValue]
           tokenSymbol = symbolArray[0].toString()
         } catch (error) {
           console.warn('Could not get tokenSymbol, using default:', error)
         }
 
-        console.log(`Chain properties: ss58=${ss58Format}, decimals=${tokenDecimals}, symbol=${tokenSymbol}`)
+        console.log(
+          `Chain properties: ss58=${ss58Format}, decimals=${tokenDecimals}, symbol=${tokenSymbol}`
+        )
 
         // Configure formatBalance
         formatBalance.setDefaults({
@@ -193,7 +214,13 @@ class PolkadotService {
     }
 
     const { api } = connection
-    const { address, startBlock = 1, endBlock, limit = 100, onProgress } = filter
+    const {
+      address,
+      startBlock = 1,
+      endBlock,
+      limit = 100,
+      onProgress,
+    } = filter
 
     const transactions: SubstrateTransaction[] = []
 
@@ -209,10 +236,13 @@ class PolkadotService {
       })
 
       // Get current block if endBlock not specified
-      const finalEndBlock = endBlock || (await api.rpc.chain.getHeader()).number.toNumber()
+      const finalEndBlock =
+        endBlock || (await api.rpc.chain.getHeader()).number.toNumber()
       const totalBlocks = finalEndBlock - startBlock + 1
 
-      console.log(`Fetching transactions from block ${finalEndBlock} down to ${startBlock} (newest first)`)
+      console.log(
+        `Fetching transactions from block ${finalEndBlock} down to ${startBlock} (newest first)`
+      )
 
       onProgress?.({
         stage: 'fetching',
@@ -248,7 +278,7 @@ class PolkadotService {
         })
 
         // OPTIMIZATION: Parallel block fetching with Promise.all
-        const blockDataPromises = blocksToFetch.map(async (blockNum) => {
+        const blockDataPromises = blocksToFetch.map(async blockNum => {
           return this.fetchBlockTransactions(api, blockNum, address, network)
         })
 
@@ -324,8 +354,8 @@ class PolkadotService {
     if (isEVMChain && address.startsWith('0x')) {
       throw new Error(
         `EVM transaction scanning for ${network} is not yet implemented. ` +
-        `Please use Polkadot or Kusama relay chains for now. ` +
-        `EVM support coming soon!`
+          `Please use Polkadot or Kusama relay chains for now. ` +
+          `EVM support coming soon!`
       )
     }
 
@@ -336,8 +366,12 @@ class PolkadotService {
 
       // PHASE 1: Fetch historical data from Subscan (instant)
       // Using Subscan API v2 endpoint
-      console.log(`🚀 [Hybrid] Checking if Subscan is available for ${network}...`)
-      console.log(`🚀 [Hybrid] Subscan available: ${subscanService.isAvailable(network)}`)
+      console.log(
+        `🚀 [Hybrid] Checking if Subscan is available for ${network}...`
+      )
+      console.log(
+        `🚀 [Hybrid] Subscan available: ${subscanService.isAvailable(network)}`
+      )
 
       if (subscanService.isAvailable(network)) {
         try {
@@ -351,26 +385,34 @@ class PolkadotService {
             message: 'Fetching historical transactions from Subscan API...',
           })
 
-          const subscanTxs = await subscanService.fetchAllTransactions(network, address, {
-            limit: Math.min(limit, 100), // Subscan API max is 100 rows
-            onProgress: (stage, current, _total) => {
-              onProgress?.({
-                stage: 'fetching',
-                currentBlock: 0,
-                totalBlocks: 0,
-                blocksScanned: 0,
-                transactionsFound: current,
-                message: stage,
-              })
-            },
-          })
+          const subscanTxs = await subscanService.fetchAllTransactions(
+            network,
+            address,
+            {
+              limit: Math.min(limit, 100), // Subscan API max is 100 rows
+              onProgress: (stage, current, _total) => {
+                onProgress?.({
+                  stage: 'fetching',
+                  currentBlock: 0,
+                  totalBlocks: 0,
+                  blocksScanned: 0,
+                  transactionsFound: current,
+                  message: stage,
+                })
+              },
+            }
+          )
 
-          console.log(`🚀 [Hybrid] Received ${subscanTxs.length} transactions from Subscan`)
+          console.log(
+            `🚀 [Hybrid] Received ${subscanTxs.length} transactions from Subscan`
+          )
 
           // DON'T filter yet - we don't know the current block until RPC connects
           // Just add all Subscan transactions for now
           allTransactions.push(...subscanTxs)
-          console.log(`🚀 [Hybrid] Added ${subscanTxs.length} transactions from Subscan (no filtering yet)`)
+          console.log(
+            `🚀 [Hybrid] Added ${subscanTxs.length} transactions from Subscan (no filtering yet)`
+          )
 
           console.log(
             `🚀 [Hybrid] ✅ PHASE 1 complete: ${subscanTxs.length} transactions from Subscan`
@@ -385,13 +427,18 @@ class PolkadotService {
             message: `Loaded ${allTransactions.length} transactions from Subscan`,
           })
         } catch (error) {
-          console.error('🚨 [Hybrid] Subscan fetch failed, will use RPC only:', error)
+          console.error(
+            '🚨 [Hybrid] Subscan fetch failed, will use RPC only:',
+            error
+          )
           console.error('🚨 [Hybrid] This may be due to:')
           console.error('🚨   - CORS restrictions from browser')
           console.error('🚨   - Browser extension blocking requests')
           console.error('🚨   - Network/firewall blocking Subscan API')
           console.error('🚨   - Subscan API temporarily unavailable')
-          console.error('🚨 [Hybrid] Falling back to slow RPC scanning (this may take a while)...')
+          console.error(
+            '🚨 [Hybrid] Falling back to slow RPC scanning (this may take a while)...'
+          )
 
           onProgress?.({
             stage: 'fetching',
@@ -399,14 +446,17 @@ class PolkadotService {
             totalBlocks: 0,
             blocksScanned: 0,
             transactionsFound: 0,
-            message: 'Subscan blocked - using slow blockchain scan (may take several minutes)...',
+            message:
+              'Subscan blocked - using slow blockchain scan (may take several minutes)...',
           })
         }
       }
 
       // PHASE 2: Fetch recent blocks via RPC (for live data)
       // This phase is optional - if it fails, we still have Subscan data
-      console.log('🚀 [Hybrid] PHASE 2: Attempting to connect to RPC for recent blocks...')
+      console.log(
+        '🚀 [Hybrid] PHASE 2: Attempting to connect to RPC for recent blocks...'
+      )
 
       let api: ApiPromise | null = null
 
@@ -433,17 +483,25 @@ class PolkadotService {
         // Get current block height
         const currentBlockHeader = await api.rpc.chain.getHeader()
         currentBlock = currentBlockHeader.number.toNumber()
-        recentBlockStart = Math.max(currentBlock - RECENT_BLOCKS_CUTOFF, startBlock)
+        recentBlockStart = Math.max(
+          currentBlock - RECENT_BLOCKS_CUTOFF,
+          startBlock
+        )
 
         console.log(`🚀 [Hybrid] RPC connected! Current block: ${currentBlock}`)
       } catch (rpcError) {
-        console.warn('🚀 [Hybrid] RPC connection failed, skipping recent block scan:', rpcError)
-        console.log(`🚀 [Hybrid] Continuing with ${allTransactions.length} transactions from Subscan only...`)
+        console.warn(
+          '🚀 [Hybrid] RPC connection failed, skipping recent block scan:',
+          rpcError
+        )
+        console.log(
+          `🚀 [Hybrid] Continuing with ${allTransactions.length} transactions from Subscan only...`
+        )
 
         // Skip Phase 2 if RPC fails - we already have historical data from Subscan
         // Deduplicate and return what we have
         const seen = new Set<string>()
-        const deduplicated = allTransactions.filter((tx) => {
+        const deduplicated = allTransactions.filter(tx => {
           if (seen.has(tx.id)) return false
           seen.add(tx.id)
           return true
@@ -460,7 +518,9 @@ class PolkadotService {
           message: `Found ${final.length} transactions from Subscan (RPC unavailable)`,
         })
 
-        console.log(`🚀 [Hybrid] ✅✅✅ RETURNING ${final.length} TRANSACTIONS (Subscan only) ✅✅✅`)
+        console.log(
+          `🚀 [Hybrid] ✅✅✅ RETURNING ${final.length} TRANSACTIONS (Subscan only) ✅✅✅`
+        )
         return final
       }
 
@@ -497,7 +557,7 @@ class PolkadotService {
         })
 
         // Parallel block fetching
-        const blockDataPromises = blocksToFetch.map(async (blockNum) => {
+        const blockDataPromises = blocksToFetch.map(async blockNum => {
           return this.fetchBlockTransactions(api, blockNum, address, network)
         })
 
@@ -527,22 +587,30 @@ class PolkadotService {
       })
 
       // Deduplicate by transaction ID
-      console.log(`🚀 [Hybrid] PHASE 3: Deduplicating ${allTransactions.length} transactions...`)
+      console.log(
+        `🚀 [Hybrid] PHASE 3: Deduplicating ${allTransactions.length} transactions...`
+      )
       const seen = new Set<string>()
-      const deduplicated = allTransactions.filter((tx) => {
+      const deduplicated = allTransactions.filter(tx => {
         if (seen.has(tx.id)) return false
         seen.add(tx.id)
         return true
       })
-      console.log(`🚀 [Hybrid] After dedup: ${deduplicated.length} transactions`)
+      console.log(
+        `🚀 [Hybrid] After dedup: ${deduplicated.length} transactions`
+      )
 
       // Sort by block number descending (newest first)
       deduplicated.sort((a, b) => b.blockNumber - a.blockNumber)
 
       // Limit results
       const final = deduplicated.slice(0, limit)
-      console.log(`🚀 [Hybrid] After limit (${limit}): ${final.length} transactions`)
-      console.log(`🚀 [Hybrid] ✅✅✅ RETURNING ${final.length} TRANSACTIONS ✅✅✅`)
+      console.log(
+        `🚀 [Hybrid] After limit (${limit}): ${final.length} transactions`
+      )
+      console.log(
+        `🚀 [Hybrid] ✅✅✅ RETURNING ${final.length} TRANSACTIONS ✅✅✅`
+      )
 
       onProgress?.({
         stage: 'complete',
@@ -553,25 +621,28 @@ class PolkadotService {
         message: `Found ${final.length} transaction${final.length !== 1 ? 's' : ''} (${allTransactions.length - recentTxs.length} from Subscan, ${recentTxs.length} from blockchain)`,
       })
 
-      console.log(`🚀 [Hybrid] Total: ${final.length} (deduped from ${allTransactions.length})`)
+      console.log(
+        `🚀 [Hybrid] Total: ${final.length} (deduped from ${allTransactions.length})`
+      )
       return final
     } catch (error) {
       console.error(`Hybrid fetch failed for ${address}:`, error)
 
       // Provide more helpful error messages
-      const errorMessage = error instanceof Error ? error.message : String(error)
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
 
       if (errorMessage.includes('Failed to connect')) {
         throw new Error(
           'Unable to connect to Polkadot network. Please check your internet connection and try again. ' +
-          'If the problem persists, the RPC nodes may be temporarily unavailable.'
+            'If the problem persists, the RPC nodes may be temporarily unavailable.'
         )
       }
 
       if (errorMessage.includes('Subscan')) {
         throw new Error(
           'Subscan API is currently unavailable. The sync will take longer as it scans the blockchain directly. ' +
-          'Please be patient or try again later.'
+            'Please be patient or try again later.'
         )
       }
 
@@ -603,7 +674,9 @@ class PolkadotService {
 
       // Log first block to verify scanning is working
       if (blockNum % 1000 === 0) {
-        console.log(`Scanning block #${blockNum}, found ${signedBlock.block.extrinsics.length} extrinsics`)
+        console.log(
+          `Scanning block #${blockNum}, found ${signedBlock.block.extrinsics.length} extrinsics`
+        )
       }
 
       // Process each extrinsic
@@ -615,7 +688,11 @@ class PolkadotService {
 
         // Get events for this extrinsic
         const events = allRecords
-          .filter((record: any) => record.phase.isApplyExtrinsic && record.phase.asApplyExtrinsic.eq(index))
+          .filter(
+            (record: any) =>
+              record.phase.isApplyExtrinsic &&
+              record.phase.asApplyExtrinsic.eq(index)
+          )
           .map((record: any) => ({
             method: record.event.method,
             section: record.event.section,
@@ -630,7 +707,11 @@ class PolkadotService {
         // Also check transfer events and staking rewards
         events.forEach((event: any) => {
           if (event.section === 'balances' && event.method === 'Transfer') {
-            const data = event.data as { from: string; to: string; amount: string }
+            const data = event.data as {
+              from: string
+              to: string
+              amount: string
+            }
             if (data.from === address || data.to === address) {
               isRelevant = true
             }
@@ -646,22 +727,42 @@ class PolkadotService {
 
         if (isRelevant) {
           // Find success/failure event
-          const isSuccess = events.some((e: any) => e.section === 'system' && e.method === 'ExtrinsicSuccess')
+          const isSuccess = events.some(
+            (e: any) =>
+              e.section === 'system' && e.method === 'ExtrinsicSuccess'
+          )
 
           // Extract transfer details
-          const transferEvent = events.find((e: any) => e.section === 'balances' && e.method === 'Transfer')
-          const transferData = transferEvent?.data as { from?: string; to?: string; amount?: string }
+          const transferEvent = events.find(
+            (e: any) => e.section === 'balances' && e.method === 'Transfer'
+          )
+          const transferData = transferEvent?.data as {
+            from?: string
+            to?: string
+            amount?: string
+          }
 
           // OPTIMIZATION: Extract transaction fee
           const feeEvent = events.find(
-            (e: any) => e.section === 'transactionPayment' && e.method === 'TransactionFeePaid'
+            (e: any) =>
+              e.section === 'transactionPayment' &&
+              e.method === 'TransactionFeePaid'
           )
-          const feeData = feeEvent?.data as { who?: string; actualFee?: string; tip?: string }
+          const feeData = feeEvent?.data as {
+            who?: string
+            actualFee?: string
+            tip?: string
+          }
           const fee = feeData?.actualFee || '0'
 
           // OPTIMIZATION: Extract staking reward
-          const rewardEvent = events.find((e: any) => e.section === 'staking' && e.method === 'Rewarded')
-          const rewardData = rewardEvent?.data as { stash?: string; amount?: string }
+          const rewardEvent = events.find(
+            (e: any) => e.section === 'staking' && e.method === 'Rewarded'
+          )
+          const rewardData = rewardEvent?.data as {
+            stash?: string
+            amount?: string
+          }
           const rewardAmount = rewardData?.amount
 
           // Determine value and transaction type
@@ -733,7 +834,7 @@ class PolkadotService {
       throw new Error(`Not connected to ${network}`)
     }
 
-    const unsubscribe = await api.rpc.chain.subscribeNewHeads((header) => {
+    const unsubscribe = await api.rpc.chain.subscribeNewHeads(header => {
       callback(header)
     })
 
@@ -754,9 +855,12 @@ class PolkadotService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const unsubscribe = (await api.query.system.account(address, (account: any) => {
-      callback(account.data.free.toString())
-    })) as unknown as () => void
+    const unsubscribe = (await api.query.system.account(
+      address,
+      (account: any) => {
+        callback(account.data.free.toString())
+      }
+    )) as unknown as () => void
 
     return unsubscribe
   }
@@ -764,11 +868,18 @@ class PolkadotService {
   /**
    * Classify transaction type based on method and section
    */
-  private classifyTransactionType(section: string, method: string): SubstrateTransaction['type'] {
+  private classifyTransactionType(
+    section: string,
+    method: string
+  ): SubstrateTransaction['type'] {
     if (section === 'balances' && method === 'transfer') return 'transfer'
     if (section === 'staking') return 'staking'
     if (section === 'xcmPallet' || section === 'polkadotXcm') return 'xcm'
-    if (section === 'democracy' || section === 'council' || section === 'treasury') {
+    if (
+      section === 'democracy' ||
+      section === 'council' ||
+      section === 'treasury'
+    ) {
       return 'governance'
     }
     return 'other'
@@ -795,8 +906,8 @@ class PolkadotService {
    * Disconnect from all networks
    */
   async disconnectAll(): Promise<void> {
-    const disconnectPromises = Array.from(this.connections.keys()).map((network) =>
-      this.disconnect(network)
+    const disconnectPromises = Array.from(this.connections.keys()).map(
+      network => this.disconnect(network)
     )
     await Promise.all(disconnectPromises)
   }

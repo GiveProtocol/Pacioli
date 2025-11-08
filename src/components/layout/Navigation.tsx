@@ -98,7 +98,12 @@ const Navigation: React.FC<NavigationProps> = ({
   // Simplified navigation for individuals
   const individualNavItems: NavItem[] = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Transactions', href: '/transactions', icon: Receipt, badge: pendingCount > 0 ? pendingCount : undefined },
+    {
+      name: 'Transactions',
+      href: '/transactions',
+      icon: Receipt,
+      badge: pendingCount > 0 ? pendingCount : undefined,
+    },
     { name: 'Wallets', href: '/wallets', icon: Wallet },
     { name: 'Tax Reports', href: '/reports', icon: FileText },
     {
@@ -172,7 +177,14 @@ const Navigation: React.FC<NavigationProps> = ({
               className="h-12 w-auto mix-blend-multiply dark:mix-blend-normal"
             />
             <div className="ml-3 flex flex-col">
-              <span className="font-serif font-bold text-gray-900 dark:text-white" style={{ fontSize: '24px', letterSpacing: '0.5px', color: '#7c3626' }}>
+              <span
+                className="font-serif font-bold text-gray-900 dark:text-white"
+                style={{
+                  fontSize: '24px',
+                  letterSpacing: '0.5px',
+                  color: '#7c3626',
+                }}
+              >
                 Pacioli
               </span>
               <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
@@ -322,7 +334,14 @@ const Navigation: React.FC<NavigationProps> = ({
                   className="h-12 w-auto mix-blend-multiply dark:mix-blend-normal"
                 />
                 <div className="ml-3 flex flex-col">
-                  <span className="font-serif font-bold text-gray-900 dark:text-white" style={{ fontSize: '24px', letterSpacing: '0.5px', color: '#7c3626' }}>
+                  <span
+                    className="font-serif font-bold text-gray-900 dark:text-white"
+                    style={{
+                      fontSize: '24px',
+                      letterSpacing: '0.5px',
+                      color: '#7c3626',
+                    }}
+                  >
                     Pacioli
                   </span>
                   <span className="text-xs font-medium text-gray-500 dark:text-gray-400">

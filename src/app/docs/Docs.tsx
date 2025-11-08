@@ -239,8 +239,11 @@ const Docs: React.FC = () => {
                       {isExpanded && (
                         <div className="ml-6 mt-1 space-y-1">
                           {section.items.map(item => {
-                            const hasSubItems = item.items && item.items.length > 0
-                            const isItemExpanded = expandedItems.includes(item.id)
+                            const hasSubItems =
+                              item.items && item.items.length > 0
+                            const isItemExpanded = expandedItems.includes(
+                              item.id
+                            )
                             const isSelected = selectedDoc === item.id
 
                             return (
@@ -271,12 +274,15 @@ const Docs: React.FC = () => {
                                 {hasSubItems && isItemExpanded && (
                                   <div className="ml-4 mt-1 space-y-1">
                                     {item.items!.map(subItem => {
-                                      const isSubSelected = selectedDoc === subItem.id
+                                      const isSubSelected =
+                                        selectedDoc === subItem.id
 
                                       return (
                                         <button
                                           key={subItem.id}
-                                          onClick={() => setSelectedDoc(subItem.id)}
+                                          onClick={() =>
+                                            setSelectedDoc(subItem.id)
+                                          }
                                           className={`w-full px-3 py-1 text-xs rounded transition-colors text-left ${
                                             isSubSelected
                                               ? 'bg-[#7c3626]/10 dark:bg-[#a04830]/10 text-[#7c3626] dark:text-[#a04830] font-medium'
@@ -317,8 +323,8 @@ const Docs: React.FC = () => {
                       .join(' ')}
                   </h2>
                   <p className="text-gray-500 dark:text-gray-400">
-                    This documentation page is currently being prepared and will be
-                    available soon.
+                    This documentation page is currently being prepared and will
+                    be available soon.
                   </p>
                 </div>
 

@@ -70,9 +70,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full px-4 py-2 text-left border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${
-          error
-            ? 'border-red-500'
-            : 'border-gray-300 dark:border-gray-600'
+          error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
         } focus:outline-none focus:ring-2 focus:ring-blue-500`}
       >
         {selectedToken && selectedChain ? (
@@ -191,10 +189,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
       )}
 
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
       )}
     </div>
   )

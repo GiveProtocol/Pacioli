@@ -15,6 +15,7 @@ A comprehensive blockchain accounting application built with Tauri, React, TypeS
 ## Features
 
 ### Core Accounting
+
 - **Multi-Chain Support** - Track transactions across Polkadot parachains
 - **Double-Entry Accounting** - Professional-grade chart of accounts
 - **Multi-Currency** - Support for fiat and crypto currencies
@@ -22,12 +23,14 @@ A comprehensive blockchain accounting application built with Tauri, React, TypeS
 - **ERC20 Tokens** - Full support for token tracking and categorization
 
 ### Blockchain Integration
+
 - **EVM Indexer** - Efficient indexing for Moonbeam, Moonriver, Astar
 - **Wallet Integration** - MetaMask, Polkadot.js, Talisman
 - **Smart Contracts** - PolkaVM-enabled Hardhat for Paseo TestNet
 - **Transaction History** - Complete historical data with categorization
 
 ### User Experience
+
 - **Modern UI** - React 19 with Tailwind CSS
 - **Dark Mode** - Beautiful light and dark themes
 - **Desktop App** - Cross-platform with Tauri
@@ -40,11 +43,11 @@ A comprehensive blockchain accounting application built with Tauri, React, TypeS
 
 Pacioli uses a multi-repository architecture:
 
-| Repository | Purpose | Status |
-|------------|---------|--------|
-| **[pacioli-core](https://github.com/GiveProtocol/pacioli-core)** (this repo) | Main application | Active |
-| **[pacioli-docs](https://github.com/GiveProtocol/pacioli-docs)** | Documentation site | Active |
-| **[pacioli-plugins](https://github.com/GiveProtocol/pacioli-plugins)** | Plugin system | Coming Soon |
+| Repository                                                                   | Purpose            | Status      |
+| ---------------------------------------------------------------------------- | ------------------ | ----------- |
+| **[pacioli-core](https://github.com/GiveProtocol/pacioli-core)** (this repo) | Main application   | Active      |
+| **[pacioli-docs](https://github.com/GiveProtocol/pacioli-docs)**             | Documentation site | Active      |
+| **[pacioli-plugins](https://github.com/GiveProtocol/pacioli-plugins)**       | Plugin system      | Coming Soon |
 
 ---
 
@@ -81,6 +84,7 @@ The application will launch in development mode with hot-reloading enabled.
 ## Tech Stack
 
 ### Frontend
+
 - **Tauri 2.0** - Cross-platform desktop framework
 - **React 19** - Modern React with TypeScript
 - **Tailwind CSS 4** - Utility-first styling
@@ -89,6 +93,7 @@ The application will launch in development mode with hot-reloading enabled.
 - **Ethers.js 6** - Ethereum interaction
 
 ### Backend
+
 - **Rust** - High-performance, memory-safe backend
 - **Tauri** - Native desktop APIs
 - **SQLite** - Local database with sqlx
@@ -96,6 +101,7 @@ The application will launch in development mode with hot-reloading enabled.
 - **Tokio** - Async runtime
 
 ### Smart Contracts
+
 - **Hardhat** - Development environment with PolkaVM
 - **Solidity 0.8.28** - Smart contract language
 - **Paseo TestNet** - Polkadot Hub TestNet
@@ -104,12 +110,12 @@ The application will launch in development mode with hot-reloading enabled.
 
 ## Supported Networks
 
-| Network | Chain ID | Type | Native Token |
-|---------|----------|------|--------------|
-| Moonbeam | 1284 | EVM Parachain | GLMR |
-| Moonriver | 1285 | EVM Parachain | MOVR |
-| Astar | 592 | EVM Parachain | ASTR |
-| Paseo TestNet | 420420422 | Test Network | PAS |
+| Network       | Chain ID  | Type          | Native Token |
+| ------------- | --------- | ------------- | ------------ |
+| Moonbeam      | 1284      | EVM Parachain | GLMR         |
+| Moonriver     | 1285      | EVM Parachain | MOVR         |
+| Astar         | 592       | EVM Parachain | ASTR         |
+| Paseo TestNet | 420420422 | Test Network  | PAS          |
 
 ---
 
@@ -196,6 +202,7 @@ Security is a top priority. Please review our [Security Policy](SECURITY.md) for
 Pacioli is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
 This means:
+
 - You can use, modify, and distribute Pacioli freely
 - If you modify and deploy Pacioli as a service (including web apps), you **must** make your source code available
 - Any derivative works must also be licensed under AGPL-3.0
@@ -208,18 +215,21 @@ See [LICENSE](LICENSE) for the full license text.
 ## Roadmap
 
 ### Current (v0.1)
+
 - Multi-chain transaction tracking
 - Basic accounting (chart of accounts)
 - Wallet integration
 - EVM indexer
 
 ### Coming Soon (v0.2)
+
 - Advanced reporting and analytics
 - Plugin system
 - Tax calculation helpers
 - Multi-entity support
 
 ### Future
+
 - Mobile app (React Native + Tauri Mobile)
 - Cloud sync (optional premium feature)
 - ERP integrations
@@ -232,6 +242,7 @@ See [LICENSE](LICENSE) for the full license text.
 Named after **Luca Pacioli**, the father of double-entry bookkeeping, this project brings professional accounting to the decentralized world.
 
 ### Benefits
+
 - **Open Source** - Full transparency and community-driven
 - **Privacy-First** - Your data stays local by default
 - **Polkadot Native** - Built specifically for the Polkadot ecosystem
@@ -252,6 +263,7 @@ Named after **Luca Pacioli**, the father of double-entry bookkeeping, this proje
 ## Acknowledgments
 
 Built with amazing open-source technologies:
+
 - [Tauri](https://tauri.app/) - Desktop framework
 - [React](https://react.dev/) - UI library
 - [Rust](https://www.rust-lang.org/) - Systems language

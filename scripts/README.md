@@ -146,6 +146,7 @@ chmod +x scripts/*.sh
 ### "Repository not found"
 
 Ensure you have:
+
 1. SSH keys configured with GitHub
 2. Access to GiveProtocol organization repositories
 

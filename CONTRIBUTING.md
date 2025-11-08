@@ -136,6 +136,7 @@ git commit -m "fix: resolve transaction parsing error"
 ```
 
 Commit message prefixes:
+
 - `feat:` - new feature
 - `fix:` - bug fix
 - `docs:` - documentation changes
@@ -318,6 +319,7 @@ type(scope): description
 ```
 
 Examples:
+
 - `feat(navigation): align logo with navigation items`
 - `fix(transactions): resolve parsing error for ERC20 transfers`
 - `docs(contributing): add documentation standards section`
@@ -359,6 +361,7 @@ Examples:
 ### Recognition
 
 Contributors are recognized in:
+
 - **README.md** contributors section
 - **Release notes** for significant contributions
 - **GitHub insights** for all contributions

@@ -42,8 +42,12 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({
     WalletType,
     WalletConnectionStatus
   > | null>(null)
-  const [connectedWallets, setConnectedWallets] = useState<ConnectedWallet[]>([])
-  const [connectingWallet, setConnectingWallet] = useState<WalletType | null>(null)
+  const [connectedWallets, setConnectedWallets] = useState<ConnectedWallet[]>(
+    []
+  )
+  const [connectingWallet, setConnectingWallet] = useState<WalletType | null>(
+    null
+  )
   const [error, setError] = useState<string | null>(null)
 
   // Detect wallets on mount
@@ -76,70 +80,77 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({
     }
   }, [])
 
-  const connectWallet = useCallback(async (walletType: WalletType) => {
-    setConnectingWallet(walletType)
-    setError(null)
-
-    try {
-      let wallet: ConnectedWallet
-
-      if (walletType === WalletType.METAMASK) {
-        wallet = await walletService.connectEVMWallet()
-      } else {
-        wallet = await walletService.connectSubstrateWallet(walletType)
-      }
-
-      const updated = [...connectedWallets, wallet]
-      setConnectedWallets(updated)
-      storageService.saveWallets(updated)
-
-      // Update wallet status
-      if (walletStatus) {
-        setWalletStatus({
-          ...walletStatus,
-          [walletType]: {
-            ...walletStatus[walletType],
-            isConnected: true,
-          },
-        })
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Connection failed'
-      setError(`Failed to connect to ${walletType}: ${errorMessage}`)
-      console.error(err)
-    } finally {
-      setConnectingWallet(null)
-    }
-  }, [connectedWallets, walletStatus])
-
-  const disconnectWallet = useCallback(async (walletType: WalletType) => {
-    try {
-      await walletService.disconnectWallet(walletType)
-      const updated = connectedWallets.filter((w) => w.type !== walletType)
-      setConnectedWallets(updated)
-      storageService.saveWallets(updated)
-
-      // Update wallet status
-      if (walletStatus) {
-        setWalletStatus({
-          ...walletStatus,
-          [walletType]: {
-            ...walletStatus[walletType],
-            isConnected: false,
-          },
-        })
-      }
-
+  const connectWallet = useCallback(
+    async (walletType: WalletType) => {
+      setConnectingWallet(walletType)
       setError(null)
-    } catch (err) {
-      setError('Failed to disconnect wallet')
-      console.error(err)
-    }
-  }, [connectedWallets, walletStatus])
+
+      try {
+        let wallet: ConnectedWallet
+
+        if (walletType === WalletType.METAMASK) {
+          wallet = await walletService.connectEVMWallet()
+        } else {
+          wallet = await walletService.connectSubstrateWallet(walletType)
+        }
+
+        const updated = [...connectedWallets, wallet]
+        setConnectedWallets(updated)
+        storageService.saveWallets(updated)
+
+        // Update wallet status
+        if (walletStatus) {
+          setWalletStatus({
+            ...walletStatus,
+            [walletType]: {
+              ...walletStatus[walletType],
+              isConnected: true,
+            },
+          })
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Connection failed'
+        setError(`Failed to connect to ${walletType}: ${errorMessage}`)
+        console.error(err)
+      } finally {
+        setConnectingWallet(null)
+      }
+    },
+    [connectedWallets, walletStatus]
+  )
+
+  const disconnectWallet = useCallback(
+    async (walletType: WalletType) => {
+      try {
+        await walletService.disconnectWallet(walletType)
+        const updated = connectedWallets.filter(w => w.type !== walletType)
+        setConnectedWallets(updated)
+        storageService.saveWallets(updated)
+
+        // Update wallet status
+        if (walletStatus) {
+          setWalletStatus({
+            ...walletStatus,
+            [walletType]: {
+              ...walletStatus[walletType],
+              isConnected: false,
+            },
+          })
+        }
+
+        setError(null)
+      } catch (err) {
+        setError('Failed to disconnect wallet')
+        console.error(err)
+      }
+    },
+    [connectedWallets, walletStatus]
+  )
 
   const isConnected = useCallback(
     (walletType: WalletType) => {
-      return connectedWallets.some((w) => w.type === walletType)
+      return connectedWallets.some(w => w.type === walletType)
     },
     [connectedWallets]
   )
@@ -168,8 +179,8 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({
           </h2>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Connect your Polkadot or Ethereum wallet to import transaction history.
-          Pacioli only requests read-only access.
+          Connect your Polkadot or Ethereum wallet to import transaction
+          history. Pacioli only requests read-only access.
         </p>
       </div>
 
@@ -178,14 +189,16 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({
         <div className="bg-[#c14040]/10 dark:bg-[#d45050]/10 border-l-4 border-[#c14040] dark:border-[#d45050] p-4 rounded">
           <div className="flex items-start">
             <AlertCircle className="w-5 h-5 text-[#c14040] dark:text-[#d45050] mr-3 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-[#c14040] dark:text-[#d45050]">{error}</p>
+            <p className="text-sm text-[#c14040] dark:text-[#d45050]">
+              {error}
+            </p>
           </div>
         </div>
       )}
 
       {/* Wallet List */}
       <div className="space-y-3">
-        {(Object.keys(walletStatus) as WalletType[]).map((walletType) => {
+        {(Object.keys(walletStatus) as WalletType[]).map(walletType => {
           const status = walletStatus[walletType]
           const info = WALLET_INFO[walletType]
           const connected = isConnected(walletType)
@@ -216,8 +229,8 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({
                   {connected && (
                     <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
                       {connectedWallets
-                        .find((w) => w.type === walletType)
-                        ?.accounts.map((acc) => (
+                        .find(w => w.type === walletType)
+                        ?.accounts.map(acc => (
                           <div key={acc.address} className="truncate">
                             {acc.name || 'Unnamed'}: {acc.address}
                           </div>
@@ -274,15 +287,22 @@ export const WalletConnector: React.FC<WalletConnectorProps> = ({
           </h3>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Total Wallets:</span>
+              <span className="text-gray-600 dark:text-gray-400">
+                Total Wallets:
+              </span>
               <span className="font-semibold text-gray-900 dark:text-white">
                 {connectedWallets.length}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Total Accounts:</span>
+              <span className="text-gray-600 dark:text-gray-400">
+                Total Accounts:
+              </span>
               <span className="font-semibold text-gray-900 dark:text-white">
-                {connectedWallets.reduce((sum, w) => sum + w.accounts.length, 0)}
+                {connectedWallets.reduce(
+                  (sum, w) => sum + w.accounts.length,
+                  0
+                )}
               </span>
             </div>
           </div>

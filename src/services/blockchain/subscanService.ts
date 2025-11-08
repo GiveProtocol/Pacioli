@@ -119,7 +119,9 @@ class SubscanService {
     const { row = 100, page = 0, onProgress } = options
     const transactions: SubstrateTransaction[] = []
 
-    console.log(`🔍 [Subscan] fetchTransfers: ${network}:${address}, row=${row}, page=${page}`)
+    console.log(
+      `🔍 [Subscan] fetchTransfers: ${network}:${address}, row=${row}, page=${page}`
+    )
 
     try {
       // Fetch transfers (sent + received)
@@ -135,24 +137,35 @@ class SubscanService {
       ).catch(err => {
         // Enhance error message for CORS issues
         if (err instanceof TypeError && err.message.includes('NetworkError')) {
-          console.error('🚨 [Subscan] CORS or Network Error - Subscan API may be blocked by browser')
-          console.error('🚨 This is likely due to CORS restrictions or browser extensions blocking the request')
+          console.error(
+            '🚨 [Subscan] CORS or Network Error - Subscan API may be blocked by browser'
+          )
+          console.error(
+            '🚨 This is likely due to CORS restrictions or browser extensions blocking the request'
+          )
           console.error('🚨 The app will fall back to slower RPC scanning')
         }
         throw err
       })
 
-      console.log(`🔍 [Subscan] API Response code: ${response.code}, message: ${response.message}`)
+      console.log(
+        `🔍 [Subscan] API Response code: ${response.code}, message: ${response.message}`
+      )
       console.log(`🔍 [Subscan] Total count from API: ${response.data.count}`)
 
       if (response.code === 0) {
         // Subscan might return data.transfers or data.list
         const transfers = response.data.transfers || response.data.list || []
-        console.log(`🔍 [Subscan] Received ${transfers.length} transfer records from API`)
+        console.log(
+          `🔍 [Subscan] Received ${transfers.length} transfer records from API`
+        )
 
         // Debug: Log first transfer to see what data we're getting
         if (transfers.length > 0) {
-          console.log('🔍 [Subscan] Sample transfer data:', JSON.stringify(transfers[0], null, 2))
+          console.log(
+            '🔍 [Subscan] Sample transfer data:',
+            JSON.stringify(transfers[0], null, 2)
+          )
         }
 
         onProgress?.(transfers.length, response.data.count || 0)
@@ -273,15 +286,13 @@ class SubscanService {
     const transactions: SubstrateTransaction[] = []
 
     try {
-      const response = await this.makeRequest<SubscanResponse<SubscanExtrinsic>>(
-        config,
-        '/api/scan/extrinsics',
-        {
-          address,
-          row,
-          page,
-        }
-      )
+      const response = await this.makeRequest<
+        SubscanResponse<SubscanExtrinsic>
+      >(config, '/api/scan/extrinsics', {
+        address,
+        row,
+        page,
+      })
 
       if (response.code === 0 && response.data.list) {
         for (const extrinsic of response.data.list) {
@@ -332,7 +343,9 @@ class SubscanService {
     const { limit = 100, onProgress } = options
     const allTransactions: SubstrateTransaction[] = []
 
-    console.log(`🔍 [Subscan] fetchAllTransactions called for ${network}:${address}`)
+    console.log(
+      `🔍 [Subscan] fetchAllTransactions called for ${network}:${address}`
+    )
     console.log(`🔍 [Subscan] Limit: ${limit}`)
 
     try {
@@ -350,7 +363,9 @@ class SubscanService {
 
       // 2. Try to fetch extrinsics for detailed method names
       // Skip this if we already have good data from transfers
-      console.log('🔍 [Subscan] Attempting to fetch extrinsics for method details...')
+      console.log(
+        '🔍 [Subscan] Attempting to fetch extrinsics for method details...'
+      )
       let extrinsics: SubstrateTransaction[] = []
 
       // Only fetch extrinsics if transfers succeeded and we want enhanced data
@@ -368,21 +383,27 @@ class SubscanService {
         })
         console.log(`🔍 [Subscan] ✅ Received ${extrinsics.length} extrinsics`)
       } catch (error) {
-        console.warn('🔍 [Subscan] ⚠️  Failed to fetch extrinsics, using transfer data only')
+        console.warn(
+          '🔍 [Subscan] ⚠️  Failed to fetch extrinsics, using transfer data only'
+        )
         console.warn('🔍 [Subscan] Error:', error)
-        console.warn('🔍 [Subscan] This may be due to rate limiting or CORS restrictions')
-        console.warn('🔍 [Subscan] Transaction types will show as generic "balances.transfer"')
+        console.warn(
+          '🔍 [Subscan] This may be due to rate limiting or CORS restrictions'
+        )
+        console.warn(
+          '🔍 [Subscan] Transaction types will show as generic "balances.transfer"'
+        )
         // Continue without extrinsic details if this fails
       }
 
       // 3. Create a map of extrinsics by block+index for quick lookup
       const extrinsicMap = new Map<string, SubstrateTransaction>()
-      extrinsics.forEach((ext) => {
+      extrinsics.forEach(ext => {
         extrinsicMap.set(ext.id, ext)
       })
 
       // 4. Enhance transfers with method information from extrinsics
-      const enhancedTransfers = transfers.map((transfer) => {
+      const enhancedTransfers = transfers.map(transfer => {
         const matchingExt = extrinsicMap.get(transfer.id)
         if (matchingExt) {
           // Use method and section from extrinsic data
@@ -397,14 +418,18 @@ class SubscanService {
       })
 
       allTransactions.push(...enhancedTransfers)
-      console.log(`🔍 [Subscan] Enhanced ${enhancedTransfers.length} transfers with method details`)
+      console.log(
+        `🔍 [Subscan] Enhanced ${enhancedTransfers.length} transfers with method details`
+      )
 
       // 5. Add non-transfer extrinsics (governance, XCM, staking, etc.)
       const nonTransferExtrinsics = extrinsics.filter(
-        (ext) => !(ext.section === 'balances' && ext.method.includes('transfer'))
+        ext => !(ext.section === 'balances' && ext.method.includes('transfer'))
       )
       allTransactions.push(...nonTransferExtrinsics)
-      console.log(`🔍 [Subscan] Added ${nonTransferExtrinsics.length} non-transfer extrinsics`)
+      console.log(
+        `🔍 [Subscan] Added ${nonTransferExtrinsics.length} non-transfer extrinsics`
+      )
 
       // 6. Fetch staking rewards (if applicable)
       if (network === 'polkadot' || network === 'kusama') {
@@ -424,15 +449,19 @@ class SubscanService {
 
       // Deduplicate by ID
       const seen = new Set<string>()
-      const deduplicated = allTransactions.filter((tx) => {
+      const deduplicated = allTransactions.filter(tx => {
         if (seen.has(tx.id)) return false
         seen.add(tx.id)
         return true
       })
 
-      console.log(`🔍 [Subscan] After dedup: ${deduplicated.length}, returning: ${Math.min(deduplicated.length, limit)}`)
+      console.log(
+        `🔍 [Subscan] After dedup: ${deduplicated.length}, returning: ${Math.min(deduplicated.length, limit)}`
+      )
       const result = deduplicated.slice(0, limit)
-      console.log(`🔍 [Subscan] ✅ Returning ${result.length} transactions to caller`)
+      console.log(
+        `🔍 [Subscan] ✅ Returning ${result.length} transactions to caller`
+      )
       return result
     } catch (error) {
       console.error('Subscan fetch failed:', error)
@@ -482,7 +511,9 @@ class SubscanService {
       return data
     } catch {
       console.error('Failed to parse Subscan response:', responseText)
-      throw new Error(`Invalid JSON response from Subscan: ${responseText.slice(0, 200)}`)
+      throw new Error(
+        `Invalid JSON response from Subscan: ${responseText.slice(0, 200)}`
+      )
     }
   }
 
@@ -502,7 +533,9 @@ class SubscanService {
       transfer.from_account_display?.people?.display ||
       ''
     const toDisplay =
-      transfer.to_account_display?.display || transfer.to_account_display?.people?.display || ''
+      transfer.to_account_display?.display ||
+      transfer.to_account_display?.people?.display ||
+      ''
 
     // Parse display strings for action classification
     if (fromDisplay || toDisplay) {
@@ -511,7 +544,8 @@ class SubscanService {
       // Staking rewards - from nomination pools or validators
       if (
         displayText.includes('reward') ||
-        (displayText.includes('pool#') && fromDisplay.toLowerCase().includes('reward'))
+        (displayText.includes('pool#') &&
+          fromDisplay.toLowerCase().includes('reward'))
       ) {
         return {
           method: 'Reward',
@@ -522,14 +556,20 @@ class SubscanService {
 
       // Nomination pool operations
       if (displayText.includes('pool#') || displayText.includes('nomination')) {
-        if (displayText.includes('join') || toDisplay.toLowerCase().includes('pool#')) {
+        if (
+          displayText.includes('join') ||
+          toDisplay.toLowerCase().includes('pool#')
+        ) {
           return {
             method: 'join',
             section: 'nominationPools',
             type: 'staking',
           }
         }
-        if (displayText.includes('unbond') || displayText.includes('withdraw')) {
+        if (
+          displayText.includes('unbond') ||
+          displayText.includes('withdraw')
+        ) {
           return {
             method: 'unbond',
             section: 'nominationPools',
@@ -576,7 +616,10 @@ class SubscanService {
       }
 
       // Governance/Council operations
-      if (displayText.includes('council') || displayText.includes('governance')) {
+      if (
+        displayText.includes('council') ||
+        displayText.includes('governance')
+      ) {
         return {
           method: 'governance_action',
           section: 'governance',
@@ -599,12 +642,18 @@ class SubscanService {
       return {
         method: transfer.call_module_function,
         section: transfer.call_module,
-        type: this.classifyExtrinsicType(transfer.call_module, transfer.call_module_function),
+        type: this.classifyExtrinsicType(
+          transfer.call_module,
+          transfer.call_module_function
+        ),
       }
     }
 
     // Priority 2: Use extrinsic data if available
-    if (transfer.extrinsic?.call_module_function && transfer.extrinsic?.call_module) {
+    if (
+      transfer.extrinsic?.call_module_function &&
+      transfer.extrinsic?.call_module
+    ) {
       return {
         method: transfer.extrinsic.call_module_function,
         section: transfer.extrinsic.call_module,
@@ -620,7 +669,10 @@ class SubscanService {
       return {
         method: transfer.event.event_id,
         section: transfer.event.module_id,
-        type: this.classifyExtrinsicType(transfer.event.module_id, transfer.event.event_id),
+        type: this.classifyExtrinsicType(
+          transfer.event.module_id,
+          transfer.event.event_id
+        ),
       }
     }
 
@@ -628,7 +680,10 @@ class SubscanService {
       return {
         method: transfer.event_id,
         section: transfer.module || 'balances',
-        type: this.classifyExtrinsicType(transfer.module || 'balances', transfer.event_id),
+        type: this.classifyExtrinsicType(
+          transfer.module || 'balances',
+          transfer.event_id
+        ),
       }
     }
 
@@ -702,7 +757,11 @@ class SubscanService {
   ): SubstrateTransaction['type'] {
     if (module === 'balances') return 'transfer'
     if (module === 'staking') return 'staking'
-    if (module === 'xcmPallet' || module === 'polkadotXcm' || module === 'xTokens') {
+    if (
+      module === 'xcmPallet' ||
+      module === 'polkadotXcm' ||
+      module === 'xTokens'
+    ) {
       return 'xcm'
     }
     if (

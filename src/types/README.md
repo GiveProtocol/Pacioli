@@ -27,6 +27,7 @@ SQLite Schema (migrations/*.sql)
 Maps to SQLite database schema.
 
 **Main Types:**
+
 - `GLAccount` - Chart of accounts
 - `Token`, `Chain` - Blockchain entities
 - `AccountingTransaction` - Subsidiary ledger
@@ -35,9 +36,11 @@ Maps to SQLite database schema.
 - `VTokenBalance`, `VAccountBalance` - Views
 
 **Enums:**
+
 - `AccountType`, `DigitalAssetType`, `TransactionType`, `CostBasisMethod`
 
 **Example:**
+
 ```typescript
 import { GLAccount, AccountType } from '@/types/database'
 
@@ -50,7 +53,7 @@ const account: GLAccount = {
   isEditable: true,
   normalBalance: NormalBalance.Debit,
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 }
 ```
 
@@ -59,6 +62,7 @@ const account: GLAccount = {
 Business logic types.
 
 **Main Types:**
+
 - `CreateAccountingTransactionRequest`
 - `EnrichedAccountingTransaction`
 - `TokenHolding`
@@ -67,8 +71,12 @@ Business logic types.
 - `TRANSACTION_TEMPLATES`
 
 **Example:**
+
 ```typescript
-import { CreateAccountingTransactionRequest, TransactionType } from '@/types/accounting'
+import {
+  CreateAccountingTransactionRequest,
+  TransactionType,
+} from '@/types/accounting'
 
 const request: CreateAccountingTransactionRequest = {
   transactionDate: new Date(),
@@ -79,7 +87,7 @@ const request: CreateAccountingTransactionRequest = {
   totalValue: '550.00',
   transactionType: TransactionType.Purchase,
   chainId: 'polkadot',
-  walletAddress: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+  walletAddress: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
 }
 ```
 
@@ -88,6 +96,7 @@ const request: CreateAccountingTransactionRequest = {
 Financial statements and analytics.
 
 **Main Types:**
+
 - `BalanceSheetReport`
 - `IncomeStatementReport`
 - `PortfolioReport`
@@ -100,10 +109,12 @@ Financial statements and analytics.
 Type-safe Tauri backend interface.
 
 **Namespaces:**
+
 - `GLAccountCommands`, `TransactionCommands`, `JournalEntryCommands`
 - `ReportingCommands`, `PortfolioCommands`, `ExportCommands`
 
 **Example:**
+
 ```typescript
 import { invoke } from '@tauri-apps/api/tauri'
 import { TauriResponse, GLAccount } from '@/types'
@@ -119,10 +130,12 @@ if (response.success && response.data) {
 Converts between UI types (kebab-case) and DB types (Title Case).
 
 **Functions:**
+
 - `uiToDbDigitalAssetType()`, `dbToUiDigitalAssetType()`
 - `uiTokenToDbToken()`, `dbTokenToUiToken()`
 
 **Example:**
+
 ```typescript
 import { uiToDbDigitalAssetType } from '@/types/type-mappings'
 
@@ -141,7 +154,9 @@ const [accounts, setAccounts] = useState<GLAccount[]>([])
 
 useEffect(() => {
   const fetch = async () => {
-    const result = await invoke<TauriResponse<GLAccount[]>>('get_all_gl_accounts')
+    const result = await invoke<TauriResponse<GLAccount[]>>(
+      'get_all_gl_accounts'
+    )
     if (result.success) setAccounts(result.data || [])
   }
   fetch()
@@ -151,7 +166,10 @@ useEffect(() => {
 ### Create Transaction
 
 ```typescript
-import { CreateAccountingTransactionRequest, TransactionType } from '@/types/accounting'
+import {
+  CreateAccountingTransactionRequest,
+  TransactionType,
+} from '@/types/accounting'
 
 const create = async (formData: any) => {
   const request: CreateAccountingTransactionRequest = {
@@ -160,7 +178,7 @@ const create = async (formData: any) => {
     tokenId: formData.tokenId,
     quantity: formData.amount.toString(),
     transactionType: TransactionType.Purchase,
-    chainId: formData.chainId
+    chainId: formData.chainId,
   }
 
   const result = await invoke<TauriResponse<AccountingTransaction>>(
@@ -221,7 +239,10 @@ if (isDBDigitalAssetType(value)) {
 import { GLAccount, Token, AccountingTransaction } from '@/types/database'
 
 // Accounting
-import { CreateAccountingTransactionRequest, PortfolioSummary } from '@/types/accounting'
+import {
+  CreateAccountingTransactionRequest,
+  PortfolioSummary,
+} from '@/types/accounting'
 
 // Reporting
 import { BalanceSheetReport, TaxReport } from '@/types/reporting'
@@ -240,17 +261,17 @@ All monetary and quantity values:
 ```typescript
 type Decimal = string
 
-const price: Decimal = '5.50000000'        // 8 decimals
+const price: Decimal = '5.50000000' // 8 decimals
 const quantity: Decimal = '100.000000000000000000' // 18 decimals
-const value: Decimal = '550.00'            // 2 decimals
+const value: Decimal = '550.00' // 2 decimals
 ```
 
 ## Database Schema Mapping
 
-| Type | Migration File | Table |
-|------|----------------|-------|
-| `GLAccount` | `20250102000001_create_gl_accounts.sql` | `gl_accounts` |
-| `Chain`, `Token` | `20250102000002_create_chains_and_tokens.sql` | `chains`, `tokens` |
-| `AccountingTransaction`, `JournalEntry` | `20250102000003_create_journal_entries.sql` | `accounting_transactions`, `journal_entries` |
-| `TransactionLot`, `LotDisposal` | `20250102000004_create_cost_basis_tracking.sql` | `transaction_lots`, `lot_disposals` |
-| `VTokenBalance`, `VAccountBalance` | `20250102000005_create_accounting_views.sql` | `v_token_balances`, `v_account_balances` |
+| Type                                    | Migration File                                  | Table                                        |
+| --------------------------------------- | ----------------------------------------------- | -------------------------------------------- |
+| `GLAccount`                             | `20250102000001_create_gl_accounts.sql`         | `gl_accounts`                                |
+| `Chain`, `Token`                        | `20250102000002_create_chains_and_tokens.sql`   | `chains`, `tokens`                           |
+| `AccountingTransaction`, `JournalEntry` | `20250102000003_create_journal_entries.sql`     | `accounting_transactions`, `journal_entries` |
+| `TransactionLot`, `LotDisposal`         | `20250102000004_create_cost_basis_tracking.sql` | `transaction_lots`, `lot_disposals`          |
+| `VTokenBalance`, `VAccountBalance`      | `20250102000005_create_accounting_views.sql`    | `v_token_balances`, `v_account_balances`     |

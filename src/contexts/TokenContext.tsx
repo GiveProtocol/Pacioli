@@ -1,6 +1,19 @@
-import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useMemo,
+} from 'react'
 import { Chain, Token, TokenBalance, TokenPrice } from '../types/digitalAssets'
-import { SEED_CHAINS, SEED_TOKENS, getTokenById, getTokensByChain, getChainById, searchTokens as searchTokensUtil } from '../data/tokenSeedData'
+import {
+  SEED_CHAINS,
+  SEED_TOKENS,
+  getTokenById,
+  getTokensByChain,
+  getChainById,
+  searchTokens as searchTokensUtil,
+} from '../data/tokenSeedData'
 
 interface TokenContextType {
   chains: Chain[]
@@ -18,11 +31,15 @@ interface TokenContextType {
 
 const TokenContext = createContext<TokenContextType | undefined>(undefined)
 
-export const TokenProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const TokenProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [chains] = useState<Chain[]>(SEED_CHAINS)
   const [tokens, setTokens] = useState<Token[]>(SEED_TOKENS)
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([])
-  const [tokenPrices, setTokenPrices] = useState<Map<string, TokenPrice>>(new Map())
+  const [tokenPrices, setTokenPrices] = useState<Map<string, TokenPrice>>(
+    new Map()
+  )
 
   const getToken = useMemo(() => getTokenById, [])
   const getChain = useMemo(() => getChainById, [])

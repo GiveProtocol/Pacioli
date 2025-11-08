@@ -119,12 +119,14 @@ pacioli-core/
 ## Coverage
 
 ### Database Schema: 100%
+
 - All tables have TypeScript interfaces
 - All views have TypeScript interfaces
 - All enums mapped
 - All columns typed
 
 ### Operations
+
 - CRUD for all entities
 - Journal entry creation and posting
 - Cost basis calculation and disposal
@@ -150,6 +152,7 @@ pacioli-core/
 ## Integration Points
 
 ### Tauri Backend
+
 ```typescript
 import { invoke } from '@tauri-apps/api/tauri'
 import { TauriResponse, GLAccount } from '@/types'
@@ -158,24 +161,31 @@ const result = await invoke<TauriResponse<GLAccount[]>>('get_all_gl_accounts')
 ```
 
 ### React Components
+
 ```typescript
 import { GLAccount, VAccountBalance } from '@/types/database'
 const [accounts, setAccounts] = useState<GLAccount[]>([])
 ```
 
 ### Forms
+
 ```typescript
 import { CreateAccountingTransactionRequest } from '@/types/accounting'
-const request: CreateAccountingTransactionRequest = { /* ... */ }
+const request: CreateAccountingTransactionRequest = {
+  /* ... */
+}
 ```
 
 ### Reporting
+
 ```typescript
 import { BalanceSheetReport } from '@/types/reporting'
-const report = await invoke<TauriResponse<BalanceSheetReport>>('get_balance_sheet')
+const report =
+  await invoke<TauriResponse<BalanceSheetReport>>('get_balance_sheet')
 ```
 
 ### Type Conversion
+
 ```typescript
 import { uiToDbDigitalAssetType } from '@/types/type-mappings'
 const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
@@ -203,6 +213,7 @@ const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
 ## Implementation Phases
 
 ### Phase 1: Backend (Rust)
+
 - Implement Tauri commands
 - Database service layer
 - Query builders for views
@@ -210,6 +221,7 @@ const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
 - Tests
 
 ### Phase 2: Service Layer (TypeScript)
+
 - Service classes wrapping Tauri commands
 - Caching
 - Optimistic updates
@@ -217,6 +229,7 @@ const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
 - Loading and error states
 
 ### Phase 3: UI Components
+
 - Update existing components
 - New journal entry components
 - Portfolio dashboard
@@ -224,6 +237,7 @@ const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
 - Reconciliation interface
 
 ### Phase 4: Testing
+
 - Unit tests for type conversions
 - Integration tests for Tauri commands
 - E2E tests
@@ -231,6 +245,7 @@ const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
 - Performance testing
 
 ### Phase 5: Documentation
+
 - API documentation
 - User guide
 - Developer onboarding
@@ -239,13 +254,13 @@ const dbType = uiToDbDigitalAssetType('native-protocol-tokens')
 
 ## Database Schema Mapping
 
-| Type | Migration | Table |
-|------|-----------|-------|
-| GLAccount | 20250102000001 | gl_accounts |
-| Chain, Token | 20250102000002 | chains, tokens |
+| Type                                | Migration      | Table                                    |
+| ----------------------------------- | -------------- | ---------------------------------------- |
+| GLAccount                           | 20250102000001 | gl_accounts                              |
+| Chain, Token                        | 20250102000002 | chains, tokens                           |
 | AccountingTransaction, JournalEntry | 20250102000003 | accounting_transactions, journal_entries |
-| TransactionLot, LotDisposal | 20250102000004 | transaction_lots, lot_disposals |
-| VTokenBalance, VAccountBalance | 20250102000005 | v_token_balances, v_account_balances |
+| TransactionLot, LotDisposal         | 20250102000004 | transaction_lots, lot_disposals          |
+| VTokenBalance, VAccountBalance      | 20250102000005 | v_token_balances, v_account_balances     |
 
 ## Status
 

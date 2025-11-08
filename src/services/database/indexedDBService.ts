@@ -66,12 +66,14 @@ class IndexedDBService {
         resolve()
       }
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result
 
         // Create transactions store
         if (!db.objectStoreNames.contains(STORES.TRANSACTIONS)) {
-          const txStore = db.createObjectStore(STORES.TRANSACTIONS, { keyPath: 'id' })
+          const txStore = db.createObjectStore(STORES.TRANSACTIONS, {
+            keyPath: 'id',
+          })
 
           // Indexes for fast queries
           txStore.createIndex('network', 'network', { unique: false })
@@ -82,10 +84,18 @@ class IndexedDBService {
           txStore.createIndex('status', 'status', { unique: false })
 
           // Compound indexes for common queries
-          txStore.createIndex('network_address', ['network', 'address'], { unique: false })
-          txStore.createIndex('network_block', ['network', 'blockNumber'], { unique: false })
-          txStore.createIndex('address_block', ['address', 'blockNumber'], { unique: false })
-          txStore.createIndex('address_timestamp', ['address', 'timestamp'], { unique: false })
+          txStore.createIndex('network_address', ['network', 'address'], {
+            unique: false,
+          })
+          txStore.createIndex('network_block', ['network', 'blockNumber'], {
+            unique: false,
+          })
+          txStore.createIndex('address_block', ['address', 'blockNumber'], {
+            unique: false,
+          })
+          txStore.createIndex('address_timestamp', ['address', 'timestamp'], {
+            unique: false,
+          })
         }
 
         // Create wallets store
@@ -143,16 +153,18 @@ class IndexedDBService {
     const store = tx.objectStore(STORES.TRANSACTIONS)
 
     // Tag transactions with the queried address for easier retrieval
-    const taggedTransactions = transactions.map((t) => ({
+    const taggedTransactions = transactions.map(t => ({
       ...t,
       address, // The address used to query this transaction
       network,
     }))
 
-    console.log(`💾 [IndexedDB] Tagged transactions: ${taggedTransactions.length}`)
+    console.log(
+      `💾 [IndexedDB] Tagged transactions: ${taggedTransactions.length}`
+    )
 
     // Batch insert
-    const promises = taggedTransactions.map((transaction) => {
+    const promises = taggedTransactions.map(transaction => {
       return new Promise<void>((resolve, reject) => {
         const request = store.put(transaction)
         request.onsuccess = () => resolve()
@@ -161,13 +173,17 @@ class IndexedDBService {
     })
 
     await Promise.all(promises)
-    console.log(`💾 [IndexedDB] ✅ Successfully saved ${transactions.length} transactions`)
+    console.log(
+      `💾 [IndexedDB] ✅ Successfully saved ${transactions.length} transactions`
+    )
   }
 
   /**
    * Get transactions with filtering and pagination
    */
-  async getTransactions(query: TransactionQuery = {}): Promise<TransactionPage> {
+  async getTransactions(
+    query: TransactionQuery = {}
+  ): Promise<TransactionPage> {
     const db = await this.ensureDB()
     const tx = db.transaction(STORES.TRANSACTIONS, 'readonly')
     const store = tx.objectStore(STORES.TRANSACTIONS)
@@ -208,7 +224,7 @@ class IndexedDBService {
     }
 
     // Apply additional filters
-    results = results.filter((tx) => {
+    results = results.filter(tx => {
       if (type && tx.type !== type) return false
       if (startBlock && tx.blockNumber < startBlock) return false
       if (endBlock && tx.blockNumber > endBlock) return false
@@ -233,11 +249,20 @@ class IndexedDBService {
   /**
    * Get transactions for a specific address and network
    */
-  async getTransactionsFor(network: string, address: string): Promise<Transaction[]> {
+  async getTransactionsFor(
+    network: string,
+    address: string
+  ): Promise<Transaction[]> {
     console.log(`💾 [IndexedDB] getTransactionsFor called`)
     console.log(`💾 [IndexedDB] Network: ${network}, Address: ${address}`)
-    const result = await this.getTransactions({ network, address, limit: 10000 })
-    console.log(`💾 [IndexedDB] Found ${result.transactions.length} transactions`)
+    const result = await this.getTransactions({
+      network,
+      address,
+      limit: 10000,
+    })
+    console.log(
+      `💾 [IndexedDB] Found ${result.transactions.length} transactions`
+    )
     return result.transactions
   }
 
@@ -256,7 +281,7 @@ class IndexedDBService {
     let deletedCount = 0
 
     return new Promise((resolve, reject) => {
-      request.onsuccess = (event) => {
+      request.onsuccess = event => {
         const cursor = (event.target as IDBRequest).result
         if (cursor) {
           cursor.delete()
@@ -290,7 +315,7 @@ class IndexedDBService {
     const tx = db.transaction(STORES.WALLETS, 'readwrite')
     const store = tx.objectStore(STORES.WALLETS)
 
-    const promises = wallets.map((wallet) => {
+    const promises = wallets.map(wallet => {
       return new Promise<void>((resolve, reject) => {
         const request = store.put(wallet)
         request.onsuccess = () => resolve()
@@ -336,11 +361,16 @@ class IndexedDBService {
   /**
    * Load sync status for network and address
    */
-  async loadSyncStatus(network: string, address: string): Promise<SyncStatus | null> {
+  async loadSyncStatus(
+    network: string,
+    address: string
+  ): Promise<SyncStatus | null> {
     const db = await this.ensureDB()
     const tx = db.transaction(STORES.SYNC_STATUS, 'readonly')
     const store = tx.objectStore(STORES.SYNC_STATUS)
-    const result = await this.promisifyRequest<SyncStatus>(store.get([network, address]))
+    const result = await this.promisifyRequest<SyncStatus>(
+      store.get([network, address])
+    )
     return result || null
   }
 
@@ -354,7 +384,7 @@ class IndexedDBService {
     const statuses = await this.getAllFromStore<SyncStatus>(store)
 
     const record: Record<string, SyncStatus> = {}
-    statuses.forEach((status) => {
+    statuses.forEach(status => {
       const key = `${status.network}:${status.address}`
       record[key] = status
     })
@@ -386,7 +416,9 @@ class IndexedDBService {
     const db = await this.ensureDB()
     const tx = db.transaction(STORES.METADATA, 'readonly')
     const store = tx.objectStore(STORES.METADATA)
-    const result = await this.promisifyRequest<{ key: string; value: T }>(store.get(key))
+    const result = await this.promisifyRequest<{ key: string; value: T }>(
+      store.get(key)
+    )
     return result?.value || null
   }
 
@@ -406,7 +438,10 @@ class IndexedDBService {
   /**
    * Get items from an index with a range
    */
-  private async getFromIndex<T>(index: IDBIndex, range?: IDBKeyRange): Promise<T[]> {
+  private async getFromIndex<T>(
+    index: IDBIndex,
+    range?: IDBKeyRange
+  ): Promise<T[]> {
     return new Promise((resolve, reject) => {
       const request = range ? index.getAll(range) : index.getAll()
       request.onsuccess = () => resolve(request.result)
@@ -450,7 +485,10 @@ class IndexedDBService {
     }
   }
 
-  private async getStoreCount(db: IDBDatabase, storeName: string): Promise<number> {
+  private async getStoreCount(
+    db: IDBDatabase,
+    storeName: string
+  ): Promise<number> {
     const tx = db.transaction(storeName, 'readonly')
     const store = tx.objectStore(storeName)
     return this.promisifyRequest(store.count())
@@ -464,7 +502,10 @@ class IndexedDBService {
     await this.clearWallets()
 
     const db = await this.ensureDB()
-    const tx = db.transaction([STORES.SYNC_STATUS, STORES.METADATA], 'readwrite')
+    const tx = db.transaction(
+      [STORES.SYNC_STATUS, STORES.METADATA],
+      'readwrite'
+    )
     await this.promisifyRequest(tx.objectStore(STORES.SYNC_STATUS).clear())
     await this.promisifyRequest(tx.objectStore(STORES.METADATA).clear())
   }

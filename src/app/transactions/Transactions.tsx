@@ -120,9 +120,12 @@ const Transactions: React.FC = () => {
     []
   )
 
-  const handleEditClick = useCallback((id: string) => {
-    navigate(`/transactions/edit/${id}`)
-  }, [navigate])
+  const handleEditClick = useCallback(
+    (id: string) => {
+      navigate(`/transactions/edit/${id}`)
+    },
+    [navigate]
+  )
 
   const handleNewTransaction = useCallback(() => {
     navigate('/transactions/new')
@@ -334,11 +337,14 @@ const Transactions: React.FC = () => {
                                 : transaction.type === 'expense'
                                   ? '-'
                                   : ''}
-                              {transaction.amount} {token?.symbol || transaction.crypto}
+                              {transaction.amount}{' '}
+                              {token?.symbol || transaction.crypto}
                             </div>
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {transaction.fiatCurrency || currencySettings.primaryCurrency} {transaction.fiatValue.toLocaleString()}
+                            {transaction.fiatCurrency ||
+                              currencySettings.primaryCurrency}{' '}
+                            {transaction.fiatValue.toLocaleString()}
                           </div>
                           {chain && (
                             <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -355,15 +361,16 @@ const Transactions: React.FC = () => {
                     >
                       {getStatusLabel(transaction.status)}
                     </span>
-                    {transaction.approvalStatus === 'rejected' && transaction.rejectionReason && (
-                      <div className="text-xs text-red-600 dark:text-red-400 mt-1">
-                        {transaction.rejectionReason}
-                      </div>
-                    )}
+                    {transaction.approvalStatus === 'rejected' &&
+                      transaction.rejectionReason && (
+                        <div className="text-xs text-red-600 dark:text-red-400 mt-1">
+                          {transaction.rejectionReason}
+                        </div>
+                      )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation()
                         handleEditClick(transaction.id)
                       }}

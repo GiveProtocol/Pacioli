@@ -585,44 +585,145 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({
                 onChange={createSystemSelectHandler('timezone')}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="Etc/GMT+12">UTC-12:00 - International Date Line West (AoE) - Baker Island, Howland Island</option>
-                <option value="Pacific/Samoa">UTC-11:00 - Samoa Standard Time (SST) - Samoa, Niue</option>
-                <option value="Pacific/Honolulu">UTC-10:00 - Hawaii-Aleutian Standard Time (HST) - Honolulu, Tahiti</option>
-                <option value="Pacific/Marquesas">UTC-09:30 - Marquesas Time (MART) - Marquesas Islands (French Polynesia)</option>
-                <option value="America/Anchorage">UTC-09:00 - Alaska Standard Time (AKST) - Anchorage, Juneau</option>
-                <option value="America/Los_Angeles">UTC-08:00 - Pacific Standard Time (PST) - Los Angeles, Vancouver, San Francisco</option>
-                <option value="America/Denver">UTC-07:00 - Mountain Standard Time (MST) - Denver, Phoenix, Calgary</option>
-                <option value="America/Chicago">UTC-06:00 - Central Standard Time (CST) - Chicago, Mexico City, Dallas</option>
-                <option value="America/New_York">UTC-05:00 - Eastern Standard Time (EST) - New York, Toronto, Miami, Lima</option>
-                <option value="America/Halifax">UTC-04:00 - Atlantic Standard Time (AST) - Halifax, Caracas, San Juan</option>
-                <option value="America/St_Johns">UTC-03:30 - Newfoundland Standard Time (NST) - St. John's (Canada)</option>
-                <option value="America/Argentina/Buenos_Aires">UTC-03:00 - Argentina Time (ART) / Brasília Time (BRT) - Buenos Aires, São Paulo</option>
-                <option value="Atlantic/South_Georgia">UTC-02:00 - Coordinated Universal Time -2 - Fernando de Noronha, South Georgia</option>
-                <option value="Atlantic/Azores">UTC-01:00 - Azores Time (AZOT) - Azores, Cape Verde</option>
-                <option value="UTC">UTC+00:00 - Greenwich Mean Time (GMT) / UTC - London, Lisbon, Accra, Reykjavik</option>
-                <option value="Europe/Paris">UTC+01:00 - Central European Time (CET) - Paris, Berlin, Rome, Madrid, Lagos</option>
-                <option value="Europe/Athens">UTC+02:00 - Eastern European Time (EET) - Cairo, Athens, Jerusalem, Johannesburg</option>
-                <option value="Europe/Moscow">UTC+03:00 - Moscow Time (MSK) / Arabia Standard Time (AST) - Moscow, Riyadh, Istanbul, Nairobi</option>
-                <option value="Asia/Tehran">UTC+03:30 - Iran Standard Time (IRST) - Tehran</option>
-                <option value="Asia/Dubai">UTC+04:00 - Gulf Standard Time (GST) - Dubai, Abu Dhabi, Baku</option>
-                <option value="Asia/Kabul">UTC+04:30 - Afghanistan Time (AFT) - Kabul</option>
-                <option value="Asia/Karachi">UTC+05:00 - Pakistan Standard Time (PKT) - Karachi, Tashkent</option>
-                <option value="Asia/Kolkata">UTC+05:30 - Indian Standard Time (IST) - New Delhi, Mumbai, Chennai</option>
-                <option value="Asia/Kathmandu">UTC+05:45 - Nepal Time (NPT) - Kathmandu</option>
-                <option value="Asia/Dhaka">UTC+06:00 - Bangladesh Standard Time (BST) - Dhaka, Almaty</option>
-                <option value="Asia/Yangon">UTC+06:30 - Myanmar Standard Time (MMT) - Yangon</option>
-                <option value="Asia/Bangkok">UTC+07:00 - Indochina Time (ICT) - Bangkok, Jakarta, Hanoi</option>
-                <option value="Asia/Shanghai">UTC+08:00 - China Standard Time (CST) - Beijing, Hong Kong, Singapore, Perth</option>
-                <option value="Australia/Eucla">UTC+08:45 - Australian Central Western Standard Time (ACWST) - Eucla (Australia)</option>
-                <option value="Asia/Tokyo">UTC+09:00 - Japan Standard Time (JST) / Korea Standard Time (KST) - Tokyo, Seoul</option>
-                <option value="Australia/Adelaide">UTC+09:30 - Australian Central Standard Time (ACST) - Adelaide, Darwin</option>
-                <option value="Australia/Sydney">UTC+10:00 - Australian Eastern Standard Time (AEST) - Sydney, Melbourne, Brisbane, Guam</option>
-                <option value="Australia/Lord_Howe">UTC+10:30 - Lord Howe Standard Time (LHST) - Lord Howe Island (Australia)</option>
-                <option value="Pacific/Guadalcanal">UTC+11:00 - Solomon Islands Time (SBT) - Vladivostok, New Caledonia</option>
-                <option value="Pacific/Auckland">UTC+12:00 - New Zealand Standard Time (NZST) - Auckland, Fiji</option>
-                <option value="Pacific/Chatham">UTC+12:45 - Chatham Standard Time (CHAST) - Chatham Islands (New Zealand)</option>
-                <option value="Pacific/Tongatapu">UTC+13:00 - Phoenix Island Time (PHOT) - Tonga, Phoenix Islands</option>
-                <option value="Pacific/Kiritimati">UTC+14:00 - Line Islands Time (LINT) - Kiribati</option>
+                <option value="Etc/GMT+12">
+                  UTC-12:00 - International Date Line West (AoE) - Baker Island,
+                  Howland Island
+                </option>
+                <option value="Pacific/Samoa">
+                  UTC-11:00 - Samoa Standard Time (SST) - Samoa, Niue
+                </option>
+                <option value="Pacific/Honolulu">
+                  UTC-10:00 - Hawaii-Aleutian Standard Time (HST) - Honolulu,
+                  Tahiti
+                </option>
+                <option value="Pacific/Marquesas">
+                  UTC-09:30 - Marquesas Time (MART) - Marquesas Islands (French
+                  Polynesia)
+                </option>
+                <option value="America/Anchorage">
+                  UTC-09:00 - Alaska Standard Time (AKST) - Anchorage, Juneau
+                </option>
+                <option value="America/Los_Angeles">
+                  UTC-08:00 - Pacific Standard Time (PST) - Los Angeles,
+                  Vancouver, San Francisco
+                </option>
+                <option value="America/Denver">
+                  UTC-07:00 - Mountain Standard Time (MST) - Denver, Phoenix,
+                  Calgary
+                </option>
+                <option value="America/Chicago">
+                  UTC-06:00 - Central Standard Time (CST) - Chicago, Mexico
+                  City, Dallas
+                </option>
+                <option value="America/New_York">
+                  UTC-05:00 - Eastern Standard Time (EST) - New York, Toronto,
+                  Miami, Lima
+                </option>
+                <option value="America/Halifax">
+                  UTC-04:00 - Atlantic Standard Time (AST) - Halifax, Caracas,
+                  San Juan
+                </option>
+                <option value="America/St_Johns">
+                  UTC-03:30 - Newfoundland Standard Time (NST) - St. John's
+                  (Canada)
+                </option>
+                <option value="America/Argentina/Buenos_Aires">
+                  UTC-03:00 - Argentina Time (ART) / Brasília Time (BRT) -
+                  Buenos Aires, São Paulo
+                </option>
+                <option value="Atlantic/South_Georgia">
+                  UTC-02:00 - Coordinated Universal Time -2 - Fernando de
+                  Noronha, South Georgia
+                </option>
+                <option value="Atlantic/Azores">
+                  UTC-01:00 - Azores Time (AZOT) - Azores, Cape Verde
+                </option>
+                <option value="UTC">
+                  UTC+00:00 - Greenwich Mean Time (GMT) / UTC - London, Lisbon,
+                  Accra, Reykjavik
+                </option>
+                <option value="Europe/Paris">
+                  UTC+01:00 - Central European Time (CET) - Paris, Berlin, Rome,
+                  Madrid, Lagos
+                </option>
+                <option value="Europe/Athens">
+                  UTC+02:00 - Eastern European Time (EET) - Cairo, Athens,
+                  Jerusalem, Johannesburg
+                </option>
+                <option value="Europe/Moscow">
+                  UTC+03:00 - Moscow Time (MSK) / Arabia Standard Time (AST) -
+                  Moscow, Riyadh, Istanbul, Nairobi
+                </option>
+                <option value="Asia/Tehran">
+                  UTC+03:30 - Iran Standard Time (IRST) - Tehran
+                </option>
+                <option value="Asia/Dubai">
+                  UTC+04:00 - Gulf Standard Time (GST) - Dubai, Abu Dhabi, Baku
+                </option>
+                <option value="Asia/Kabul">
+                  UTC+04:30 - Afghanistan Time (AFT) - Kabul
+                </option>
+                <option value="Asia/Karachi">
+                  UTC+05:00 - Pakistan Standard Time (PKT) - Karachi, Tashkent
+                </option>
+                <option value="Asia/Kolkata">
+                  UTC+05:30 - Indian Standard Time (IST) - New Delhi, Mumbai,
+                  Chennai
+                </option>
+                <option value="Asia/Kathmandu">
+                  UTC+05:45 - Nepal Time (NPT) - Kathmandu
+                </option>
+                <option value="Asia/Dhaka">
+                  UTC+06:00 - Bangladesh Standard Time (BST) - Dhaka, Almaty
+                </option>
+                <option value="Asia/Yangon">
+                  UTC+06:30 - Myanmar Standard Time (MMT) - Yangon
+                </option>
+                <option value="Asia/Bangkok">
+                  UTC+07:00 - Indochina Time (ICT) - Bangkok, Jakarta, Hanoi
+                </option>
+                <option value="Asia/Shanghai">
+                  UTC+08:00 - China Standard Time (CST) - Beijing, Hong Kong,
+                  Singapore, Perth
+                </option>
+                <option value="Australia/Eucla">
+                  UTC+08:45 - Australian Central Western Standard Time (ACWST) -
+                  Eucla (Australia)
+                </option>
+                <option value="Asia/Tokyo">
+                  UTC+09:00 - Japan Standard Time (JST) / Korea Standard Time
+                  (KST) - Tokyo, Seoul
+                </option>
+                <option value="Australia/Adelaide">
+                  UTC+09:30 - Australian Central Standard Time (ACST) -
+                  Adelaide, Darwin
+                </option>
+                <option value="Australia/Sydney">
+                  UTC+10:00 - Australian Eastern Standard Time (AEST) - Sydney,
+                  Melbourne, Brisbane, Guam
+                </option>
+                <option value="Australia/Lord_Howe">
+                  UTC+10:30 - Lord Howe Standard Time (LHST) - Lord Howe Island
+                  (Australia)
+                </option>
+                <option value="Pacific/Guadalcanal">
+                  UTC+11:00 - Solomon Islands Time (SBT) - Vladivostok, New
+                  Caledonia
+                </option>
+                <option value="Pacific/Auckland">
+                  UTC+12:00 - New Zealand Standard Time (NZST) - Auckland, Fiji
+                </option>
+                <option value="Pacific/Chatham">
+                  UTC+12:45 - Chatham Standard Time (CHAST) - Chatham Islands
+                  (New Zealand)
+                </option>
+                <option value="Pacific/Tongatapu">
+                  UTC+13:00 - Phoenix Island Time (PHOT) - Tonga, Phoenix
+                  Islands
+                </option>
+                <option value="Pacific/Kiritimati">
+                  UTC+14:00 - Line Islands Time (LINT) - Kiribati
+                </option>
               </select>
             </div>
 
