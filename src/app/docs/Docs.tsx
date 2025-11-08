@@ -185,12 +185,15 @@ const Docs: React.FC = () => {
     )
   }
 
-  const handleSelectDoc = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const docId = e.currentTarget.getAttribute('data-doc-id')
-    if (docId) {
-      setSelectedDoc(docId)
-    }
-  }, [])
+  const handleSelectDoc = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const docId = e.currentTarget.getAttribute('data-doc-id')
+      if (docId) {
+        setSelectedDoc(docId)
+      }
+    },
+    []
+  )
 
   return (
     <div className="min-h-screen ledger-background">
@@ -246,8 +249,11 @@ const Docs: React.FC = () => {
                       {isExpanded && (
                         <div className="ml-6 mt-1 space-y-1">
                           {section.items.map(item => {
-                            const hasSubItems = item.items && item.items.length > 0
-                            const isItemExpanded = expandedItems.includes(item.id)
+                            const hasSubItems =
+                              item.items && item.items.length > 0
+                            const isItemExpanded = expandedItems.includes(
+                              item.id
+                            )
                             const isSelected = selectedDoc === item.id
 
                             return (
@@ -278,7 +284,8 @@ const Docs: React.FC = () => {
                                 {hasSubItems && isItemExpanded && (
                                   <div className="ml-4 mt-1 space-y-1">
                                     {item.items!.map(subItem => {
-                                      const isSubSelected = selectedDoc === subItem.id
+                                      const isSubSelected =
+                                        selectedDoc === subItem.id
 
                                       return (
                                         <button
@@ -325,8 +332,8 @@ const Docs: React.FC = () => {
                       .join(' ')}
                   </h2>
                   <p className="text-gray-500 dark:text-gray-400">
-                    This documentation page is currently being prepared and will be
-                    available soon.
+                    This documentation page is currently being prepared and will
+                    be available soon.
                   </p>
                 </div>
 
