@@ -67,9 +67,12 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     setIsOpen(!isOpen)
   }, [isOpen])
 
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-  }, [])
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value)
+    },
+    []
+  )
 
   return (
     <div className="relative">
@@ -82,9 +85,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         type="button"
         onClick={handleToggle}
         className={`w-full px-4 py-2 text-left border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${
-          error
-            ? 'border-red-500'
-            : 'border-gray-300 dark:border-gray-600'
+          error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
         } focus:outline-none focus:ring-2 focus:ring-blue-500`}
       >
         {selectedToken && selectedChain ? (
@@ -202,12 +203,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         </div>
       )}
 
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={handleClose}
-        />
-      )}
+      {isOpen && <div className="fixed inset-0 z-40" onClick={handleClose} />}
     </div>
   )
 }
