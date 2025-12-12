@@ -1,11 +1,25 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { RefreshCw, Wallet, Database, AlertCircle, CheckCircle, Loader } from 'lucide-react'
+import {
+  RefreshCw,
+  Wallet,
+  Database,
+  AlertCircle,
+  CheckCircle,
+  Loader,
+} from 'lucide-react'
 import { WalletConnector } from '../../components/wallet/WalletConnector'
 import { TransactionList } from '../../components/wallet/TransactionList'
-import { polkadotService, type SyncProgress } from '../../services/blockchain/polkadotService'
+import {
+  polkadotService,
+  type SyncProgress,
+} from '../../services/blockchain/polkadotService'
 import { indexedDBService } from '../../services/database/indexedDBService'
 import { migrationService } from '../../services/database/migrationService'
-import { NetworkType, type ConnectedWallet, type Transaction } from '../../services/wallet/types'
+import {
+  NetworkType,
+  type ConnectedWallet,
+  type Transaction,
+} from '../../services/wallet/types'
 import { encodeAddress, decodeAddress } from '@polkadot/util-crypto'
 import { useWalletAliases } from '../../contexts/WalletAliasContext'
 
@@ -14,7 +28,10 @@ import { useWalletAliases } from '../../contexts/WalletAliasContext'
  * Polkadot wallets may return addresses in generic format (42) but we need network-specific format
  * EVM addresses (0x...) are returned as-is since they don't use SS58 encoding
  */
-const convertToNetworkFormat = (address: string, network: NetworkType): string => {
+const convertToNetworkFormat = (
+  address: string,
+  network: NetworkType
+): string => {
   // EVM addresses start with 0x - don't try to convert them
   if (address.startsWith('0x')) {
     console.log(`📍 EVM address detected, skipping SS58 conversion: ${address}`)
@@ -24,12 +41,12 @@ const convertToNetworkFormat = (address: string, network: NetworkType): string =
   try {
     // Get SS58 prefix for each network
     const ss58Formats: Record<NetworkType, number> = {
-      polkadot: 0,   // Polkadot addresses start with '1'
-      kusama: 2,     // Kusama addresses start with various letters
+      polkadot: 0, // Polkadot addresses start with '1'
+      kusama: 2, // Kusama addresses start with various letters
       moonbeam: 1284, // Moonbeam
       moonriver: 1285, // Moonriver
-      astar: 5,      // Astar
-      acala: 10,     // Acala
+      astar: 5, // Astar
+      acala: 10, // Acala
     }
 
     const ss58Prefix = ss58Formats[network]
@@ -40,7 +57,9 @@ const convertToNetworkFormat = (address: string, network: NetworkType): string =
     // Re-encode with correct network prefix
     const networkAddress = encodeAddress(publicKey, ss58Prefix)
 
-    console.log(`📍 Address conversion: ${address} -> ${networkAddress} (${network}, prefix ${ss58Prefix})`)
+    console.log(
+      `📍 Address conversion: ${address} -> ${networkAddress} (${network}, prefix ${ss58Prefix})`
+    )
 
     return networkAddress
   } catch (error) {
@@ -54,11 +73,18 @@ const WalletManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedAddress, setSelectedAddress] = useState<string>('')
-  const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>(NetworkType.POLKADOT)
-  const [connectedWallets, setConnectedWallets] = useState<ConnectedWallet[]>([])
+  const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>(
+    NetworkType.POLKADOT
+  )
+  const [connectedWallets, setConnectedWallets] = useState<ConnectedWallet[]>(
+    []
+  )
   const [dbInitialized, setDbInitialized] = useState(false)
   const [migrationStatus, setMigrationStatus] = useState<string>('')
-  const [syncStatus, setSyncStatus] = useState<{ lastSyncTime: Date; lastSyncedBlock: number } | null>(null)
+  const [syncStatus, setSyncStatus] = useState<{
+    lastSyncTime: Date
+    lastSyncedBlock: number
+  } | null>(null)
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null)
 
   // Wallet aliases
@@ -92,7 +118,9 @@ const WalletManager: React.FC = () => {
 
           if (result.success) {
             console.log('Migration successful:', result)
-            setMigrationStatus(`Migrated ${result.transactionsMigrated} transactions`)
+            setMigrationStatus(
+              `Migrated ${result.transactionsMigrated} transactions`
+            )
             setTimeout(() => setMigrationStatus(''), 3000)
           } else {
             console.error('Migration had errors:', result.errors)
@@ -113,7 +141,9 @@ const WalletManager: React.FC = () => {
 
         // Load last selected address and network from localStorage
         const lastAddress = localStorage.getItem('pacioli_last_address')
-        const lastNetwork = localStorage.getItem('pacioli_last_network') as NetworkType | null
+        const lastNetwork = localStorage.getItem(
+          'pacioli_last_network'
+        ) as NetworkType | null
 
         if (lastAddress) {
           console.log(`💾 Restoring last address: ${lastAddress}`)
@@ -138,10 +168,14 @@ const WalletManager: React.FC = () => {
     let isCurrent = true
 
     const loadData = async () => {
-      console.log(`💾 loadData called: dbInitialized=${dbInitialized}, selectedAddress=${selectedAddress}, selectedNetwork=${selectedNetwork}`)
+      console.log(
+        `💾 loadData called: dbInitialized=${dbInitialized}, selectedAddress=${selectedAddress}, selectedNetwork=${selectedNetwork}`
+      )
 
       if (!dbInitialized || !selectedAddress) {
-        console.log(`💾 Early return: dbInitialized=${dbInitialized}, selectedAddress=${selectedAddress}`)
+        console.log(
+          `💾 Early return: dbInitialized=${dbInitialized}, selectedAddress=${selectedAddress}`
+        )
         setSyncStatus(null)
         setTransactions([])
         return
@@ -150,25 +184,42 @@ const WalletManager: React.FC = () => {
       try {
         // For EVM addresses (0x...), use as-is. For Substrate, convert.
         const isEVMAddress = selectedAddress.startsWith('0x')
-        const networkAddress = convertToNetworkFormat(selectedAddress, selectedNetwork)
+        const networkAddress = convertToNetworkFormat(
+          selectedAddress,
+          selectedNetwork
+        )
 
         console.log(`💾 Loading data for address: ${selectedAddress}`)
-        console.log(`💾 Is EVM: ${isEVMAddress}, Network address: ${networkAddress}`)
+        console.log(
+          `💾 Is EVM: ${isEVMAddress}, Network address: ${networkAddress}`
+        )
 
         // Load sync status
-        const status = await indexedDBService.loadSyncStatus(selectedNetwork, networkAddress)
+        const status = await indexedDBService.loadSyncStatus(
+          selectedNetwork,
+          networkAddress
+        )
         if (!isCurrent) return // Abort if effect was cleaned up
         setSyncStatus(status)
 
         // Load saved transactions from IndexedDB
-        console.log(`💾 Loading transactions for ${networkAddress} on ${selectedNetwork}...`)
-        const savedTxs = await indexedDBService.getTransactionsFor(selectedNetwork, networkAddress)
-        console.log(`💾 Loaded ${savedTxs.length} saved transactions from IndexedDB`)
+        console.log(
+          `💾 Loading transactions for ${networkAddress} on ${selectedNetwork}...`
+        )
+        const savedTxs = await indexedDBService.getTransactionsFor(
+          selectedNetwork,
+          networkAddress
+        )
+        console.log(
+          `💾 Loaded ${savedTxs.length} saved transactions from IndexedDB`
+        )
 
         if (!isCurrent) return // Abort if effect was cleaned up
 
         // Update transactions state
-        console.log(`💾 Setting transactions state with ${savedTxs.length} transactions for ${networkAddress}`)
+        console.log(
+          `💾 Setting transactions state with ${savedTxs.length} transactions for ${networkAddress}`
+        )
         setTransactions(savedTxs)
 
         // Save selection to localStorage for persistence
@@ -188,28 +239,40 @@ const WalletManager: React.FC = () => {
   }, [selectedAddress, selectedNetwork, dbInitialized])
 
   // Handle wallet changes from WalletConnector
-  const handleWalletsChange = useCallback(async (wallets: ConnectedWallet[]) => {
-    setConnectedWallets(wallets)
+  const handleWalletsChange = useCallback(
+    async (wallets: ConnectedWallet[]) => {
+      setConnectedWallets(wallets)
 
-    // Save wallets to IndexedDB for persistence
-    try {
-      await indexedDBService.saveWallets(wallets)
-      console.log(`💾 Saved ${wallets.length} wallet(s) to IndexedDB`)
-    } catch (err) {
-      console.error('Failed to save wallets to IndexedDB:', err)
-    }
+      // Save wallets to IndexedDB for persistence
+      try {
+        await indexedDBService.saveWallets(wallets)
+        console.log(`💾 Saved ${wallets.length} wallet(s) to IndexedDB`)
+      } catch (err) {
+        console.error('Failed to save wallets to IndexedDB:', err)
+      }
 
-    // Auto-select first available address (only if none selected)
-    // Check localStorage directly to avoid race condition with state updates
-    const lastSavedAddress = localStorage.getItem('pacioli_last_address')
-    console.log(`💾 handleWalletsChange: selectedAddress='${selectedAddress}', lastSavedAddress='${lastSavedAddress}'`)
-    if (wallets.length > 0 && wallets[0].accounts.length > 0 && !selectedAddress && !lastSavedAddress) {
-      console.log(`💾 Auto-selecting first address: ${wallets[0].accounts[0].address}`)
-      setSelectedAddress(wallets[0].accounts[0].address)
-    } else {
-      console.log(`💾 NOT auto-selecting (conditions not met)`)
-    }
-  }, [selectedAddress])
+      // Auto-select first available address (only if none selected)
+      // Check localStorage directly to avoid race condition with state updates
+      const lastSavedAddress = localStorage.getItem('pacioli_last_address')
+      console.log(
+        `💾 handleWalletsChange: selectedAddress='${selectedAddress}', lastSavedAddress='${lastSavedAddress}'`
+      )
+      if (
+        wallets.length > 0 &&
+        wallets[0].accounts.length > 0 &&
+        !selectedAddress &&
+        !lastSavedAddress
+      ) {
+        console.log(
+          `💾 Auto-selecting first address: ${wallets[0].accounts[0].address}`
+        )
+        setSelectedAddress(wallets[0].accounts[0].address)
+      } else {
+        console.log(`💾 NOT auto-selecting (conditions not met)`)
+      }
+    },
+    [selectedAddress]
+  )
 
   // Handle address selection
   const handleAddressSelect = useCallback((address: string) => {
@@ -218,13 +281,19 @@ const WalletManager: React.FC = () => {
     // Note: Transactions will be auto-loaded by the useEffect above
   }, [])
 
-  const handleAddressChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    handleAddressSelect(e.target.value)
-  }, [handleAddressSelect])
+  const handleAddressChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      handleAddressSelect(e.target.value)
+    },
+    [handleAddressSelect]
+  )
 
-  const handleNetworkChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedNetwork(e.target.value as NetworkType)
-  }, [])
+  const handleNetworkChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedNetwork(e.target.value as NetworkType)
+    },
+    []
+  )
 
   // Sync transactions from blockchain
   const syncTransactions = useCallback(async () => {
@@ -247,20 +316,27 @@ const WalletManager: React.FC = () => {
 
     // Convert address to network-specific SS58 format
     // Wallets may return generic format (42) but we need network-specific
-    const networkAddress = convertToNetworkFormat(selectedAddress, selectedNetwork)
+    const networkAddress = convertToNetworkFormat(
+      selectedAddress,
+      selectedNetwork
+    )
     console.log('Converted Address (network-specific):', networkAddress)
 
     setIsLoading(true)
     setError(null)
     setSyncProgress(null)
 
-    console.log(`✅ Starting sync for address: ${networkAddress} on ${selectedNetwork}`)
+    console.log(
+      `✅ Starting sync for address: ${networkAddress} on ${selectedNetwork}`
+    )
     console.log('Calling polkadotService.connect()...')
 
     // Add timeout to prevent infinite hanging
     const syncTimeout = setTimeout(() => {
       console.error('Sync timeout after 5 minutes')
-      setError('Sync timeout: The operation took too long. Please try again with a more active address.')
+      setError(
+        'Sync timeout: The operation took too long. Please try again with a more active address.'
+      )
       setIsLoading(false)
       setSyncProgress(null)
     }, 300000) // 5 minute timeout
@@ -273,19 +349,25 @@ const WalletManager: React.FC = () => {
       console.log('Parameters:', {
         network: selectedNetwork,
         address: networkAddress,
-        limit: 100
+        limit: 100,
       })
 
-      const txs = await polkadotService.fetchTransactionHistoryHybrid(selectedNetwork, {
-        address: networkAddress,
-        limit: 100, // Increased limit since hybrid is much faster
-        onProgress: (progress) => {
-          console.log('Progress update:', progress)
-          setSyncProgress(progress)
-        },
-      })
+      const txs = await polkadotService.fetchTransactionHistoryHybrid(
+        selectedNetwork,
+        {
+          address: networkAddress,
+          limit: 100, // Increased limit since hybrid is much faster
+          onProgress: progress => {
+            console.log('Progress update:', progress)
+            setSyncProgress(progress)
+          },
+        }
+      )
 
-      console.log(`✅ Fetch complete! Received ${txs.length} transactions:`, txs)
+      console.log(
+        `✅ Fetch complete! Received ${txs.length} transactions:`,
+        txs
+      )
 
       // Report saving stage
       console.log('Saving transactions to IndexedDB...')
@@ -299,13 +381,17 @@ const WalletManager: React.FC = () => {
       })
 
       // Save to IndexedDB using NETWORK-SPECIFIC ADDRESS
-      await indexedDBService.saveTransactions(selectedNetwork, networkAddress, txs)
+      await indexedDBService.saveTransactions(
+        selectedNetwork,
+        networkAddress,
+        txs
+      )
       console.log('✅ Saved to IndexedDB')
 
       // Update sync status
       if (txs.length > 0) {
         console.log('Updating sync status...')
-        const lastBlock = Math.max(...txs.map((tx) => tx.blockNumber))
+        const lastBlock = Math.max(...txs.map(tx => tx.blockNumber))
         await indexedDBService.saveSyncStatus({
           network: selectedNetwork,
           address: networkAddress,
@@ -318,12 +404,20 @@ const WalletManager: React.FC = () => {
 
       // Reload from IndexedDB to get all transactions using NETWORK-SPECIFIC ADDRESS
       console.log('Reloading all transactions from IndexedDB...')
-      const allTxs = await indexedDBService.getTransactionsFor(selectedNetwork, networkAddress)
-      console.log(`✅ Loaded ${allTxs.length} total transactions from IndexedDB`)
+      const allTxs = await indexedDBService.getTransactionsFor(
+        selectedNetwork,
+        networkAddress
+      )
+      console.log(
+        `✅ Loaded ${allTxs.length} total transactions from IndexedDB`
+      )
       setTransactions(allTxs)
 
       // Update local sync status display
-      const newSyncStatus = await indexedDBService.loadSyncStatus(selectedNetwork, networkAddress)
+      const newSyncStatus = await indexedDBService.loadSyncStatus(
+        selectedNetwork,
+        networkAddress
+      )
       setSyncStatus(newSyncStatus)
 
       // Show success
@@ -343,11 +437,15 @@ const WalletManager: React.FC = () => {
       // Clear timeout on success
       clearTimeout(syncTimeout)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to sync transactions'
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to sync transactions'
       console.error('❌❌❌ SYNC FAILED ❌❌❌')
       console.error('Error:', err)
       console.error('Error message:', errorMessage)
-      console.error('Error stack:', err instanceof Error ? err.stack : 'No stack trace')
+      console.error(
+        'Error stack:',
+        err instanceof Error ? err.stack : 'No stack trace'
+      )
       setError(errorMessage)
       setSyncProgress(null)
 
@@ -380,7 +478,6 @@ const WalletManager: React.FC = () => {
       setSyncStatus(null)
 
       console.log('🗑️ [Purge] ✅ Purge complete!')
-
     } catch (err) {
       console.error('🗑️ [Purge] ❌ Failed to purge data:', err)
       setError('Failed to purge transaction data')
@@ -388,8 +485,8 @@ const WalletManager: React.FC = () => {
   }, [selectedAddress, selectedNetwork, dbInitialized])
 
   // Get all available addresses from connected wallets
-  const allAddresses = connectedWallets.flatMap((wallet) =>
-    wallet.accounts.map((acc) => ({
+  const allAddresses = connectedWallets.flatMap(wallet =>
+    wallet.accounts.map(acc => ({
       address: acc.address,
       name: acc.name || 'Unnamed',
       walletType: wallet.type,
@@ -407,14 +504,17 @@ const WalletManager: React.FC = () => {
           </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-400">
-          Connect your Polkadot wallets and import transaction history for accounting
+          Connect your Polkadot wallets and import transaction history for
+          accounting
         </p>
 
         {/* Migration Status Indicator */}
         {migrationStatus && (
           <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded flex items-center">
             <Database className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 flex-shrink-0" />
-            <p className="text-sm text-blue-800 dark:text-blue-300">{migrationStatus}</p>
+            <p className="text-sm text-blue-800 dark:text-blue-300">
+              {migrationStatus}
+            </p>
           </div>
         )}
       </div>
@@ -465,9 +565,10 @@ const WalletManager: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[#1e3a5f] dark:focus:ring-[#3d5a80] focus:border-transparent"
                   >
                     <option value="">Select an address...</option>
-                    {allAddresses.map((addr) => (
+                    {allAddresses.map(addr => (
                       <option key={addr.address} value={addr.address}>
-                        {formatWalletDisplay(addr.address, addr.name)} - {addr.walletType}
+                        {formatWalletDisplay(addr.address, addr.name)} -{' '}
+                        {addr.walletType}
                       </option>
                     ))}
                   </select>
@@ -501,7 +602,9 @@ const WalletManager: React.FC = () => {
                         <p className="text-sm font-semibold text-red-800 dark:text-red-300 mb-1">
                           Sync Failed
                         </p>
-                        <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+                        <p className="text-sm text-red-700 dark:text-red-400">
+                          {error}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -518,10 +621,14 @@ const WalletManager: React.FC = () => {
                       )}
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">
-                          {syncProgress.stage === 'connecting' && 'Connecting to Network'}
-                          {syncProgress.stage === 'fetching' && 'Fetching Transactions'}
-                          {syncProgress.stage === 'processing' && 'Processing Blocks'}
-                          {syncProgress.stage === 'saving' && 'Saving to Database'}
+                          {syncProgress.stage === 'connecting' &&
+                            'Connecting to Network'}
+                          {syncProgress.stage === 'fetching' &&
+                            'Fetching Transactions'}
+                          {syncProgress.stage === 'processing' &&
+                            'Processing Blocks'}
+                          {syncProgress.stage === 'saving' &&
+                            'Saving to Database'}
                           {syncProgress.stage === 'complete' && 'Sync Complete'}
                         </p>
                         <p className="text-sm text-blue-800 dark:text-blue-300">
@@ -531,7 +638,8 @@ const WalletManager: React.FC = () => {
                     </div>
 
                     {/* Progress Details */}
-                    {(syncProgress.stage === 'fetching' || syncProgress.stage === 'processing') && (
+                    {(syncProgress.stage === 'fetching' ||
+                      syncProgress.stage === 'processing') && (
                       <div className="space-y-2">
                         {/* Progress Bar */}
                         <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2 overflow-hidden">
@@ -540,7 +648,9 @@ const WalletManager: React.FC = () => {
                             style={{
                               width: `${Math.min(
                                 100,
-                                (syncProgress.blocksScanned / Math.max(syncProgress.totalBlocks, 1)) * 100
+                                (syncProgress.blocksScanned /
+                                  Math.max(syncProgress.totalBlocks, 1)) *
+                                  100
                               )}%`,
                             }}
                           />
@@ -549,19 +659,27 @@ const WalletManager: React.FC = () => {
                         {/* Stats */}
                         <div className="flex justify-between text-xs text-blue-700 dark:text-blue-300">
                           <span>
-                            Blocks: {syncProgress.blocksScanned.toLocaleString()} / {syncProgress.totalBlocks.toLocaleString()}
+                            Blocks:{' '}
+                            {syncProgress.blocksScanned.toLocaleString()} /{' '}
+                            {syncProgress.totalBlocks.toLocaleString()}
                           </span>
                           <span>
                             {Math.round(
-                              (syncProgress.blocksScanned / Math.max(syncProgress.totalBlocks, 1)) * 100
-                            )}%
+                              (syncProgress.blocksScanned /
+                                Math.max(syncProgress.totalBlocks, 1)) *
+                                100
+                            )}
+                            %
                           </span>
                         </div>
 
                         {/* Transaction Count */}
                         {syncProgress.transactionsFound > 0 && (
                           <p className="text-xs text-blue-700 dark:text-blue-300">
-                            Found {syncProgress.transactionsFound.toLocaleString()} transaction{syncProgress.transactionsFound !== 1 ? 's' : ''}
+                            Found{' '}
+                            {syncProgress.transactionsFound.toLocaleString()}{' '}
+                            transaction
+                            {syncProgress.transactionsFound !== 1 ? 's' : ''}
                           </p>
                         )}
                       </div>
@@ -573,7 +691,8 @@ const WalletManager: React.FC = () => {
                 {selectedAddress && syncStatus && !syncProgress && !error && (
                   <div className="mt-4 p-3 bg-[#059669]/10 dark:bg-[#10b981]/10 border-l-4 border-[#059669] dark:border-[#10b981] rounded">
                     <p className="text-sm text-gray-700 dark:text-gray-300">
-                      Last synced: {new Date(syncStatus.lastSyncTime).toLocaleString()}
+                      Last synced:{' '}
+                      {new Date(syncStatus.lastSyncTime).toLocaleString()}
                     </p>
                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                       Block #{syncStatus.lastSyncedBlock.toLocaleString()}
@@ -594,7 +713,8 @@ const WalletManager: React.FC = () => {
                     <span className="font-semibold text-[#1e3a5f] dark:text-[#3d5a80] mr-2">
                       1.
                     </span>
-                    Install a Polkadot wallet extension (Polkadot.js, Talisman, or SubWallet)
+                    Install a Polkadot wallet extension (Polkadot.js, Talisman,
+                    or SubWallet)
                   </li>
                   <li className="flex items-start">
                     <span className="font-semibold text-[#1e3a5f] dark:text-[#3d5a80] mr-2">
