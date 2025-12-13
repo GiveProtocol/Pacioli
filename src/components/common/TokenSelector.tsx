@@ -67,15 +67,21 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
     setIsOpen(!isOpen)
   }, [isOpen])
 
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-  }, [])
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value)
+    },
+    []
+  )
 
-  const handleBackdropKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' || e.key === 'Enter') {
-      setIsOpen(false)
-    }
-  }, [])
+  const handleBackdropKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Escape' || e.key === 'Enter') {
+        setIsOpen(false)
+      }
+    },
+    []
+  )
 
   return (
     <div className="relative">
@@ -88,9 +94,7 @@ const TokenSelector: React.FC<TokenSelectorProps> = ({
         type="button"
         onClick={handleToggle}
         className={`w-full px-4 py-2 text-left border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${
-          error
-            ? 'border-red-500'
-            : 'border-gray-300 dark:border-gray-600'
+          error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
         } focus:outline-none focus:ring-2 focus:ring-blue-500`}
       >
         {selectedToken && selectedChain ? (
