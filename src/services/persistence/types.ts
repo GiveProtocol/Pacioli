@@ -84,9 +84,18 @@ export interface PersistenceService {
   deleteWallet(id: string): Promise<void>
 
   // Transaction operations
-  saveTransactions(walletId: string, transactions: TransactionInput[]): Promise<number>
-  getTransactions(walletId: string, options?: PaginationOptions): Promise<StoredTransaction[]>
-  getAllTransactions(profileId: string, options?: PaginationOptions): Promise<StoredTransaction[]>
+  saveTransactions(
+    walletId: string,
+    transactions: TransactionInput[]
+  ): Promise<number>
+  getTransactions(
+    walletId: string,
+    options?: PaginationOptions
+  ): Promise<StoredTransaction[]>
+  getAllTransactions(
+    profileId: string,
+    options?: PaginationOptions
+  ): Promise<StoredTransaction[]>
   deleteTransactions(walletId: string): Promise<number>
 
   // Settings operations

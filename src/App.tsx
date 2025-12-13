@@ -93,7 +93,10 @@ const App: React.FC = () => {
                             path="/settings/currencies"
                             element={<Settings />}
                           />
-                          <Route path="/settings/users" element={<Settings />} />
+                          <Route
+                            path="/settings/users"
+                            element={<Settings />}
+                          />
                           <Route path="/docs" element={<Docs />} />
                           <Route path="/support" element={<Support />} />
                           <Route path="/profile" element={<Profile />} />

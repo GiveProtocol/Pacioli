@@ -59,7 +59,10 @@ class TauriPersistenceService implements PersistenceService {
   // Transaction Operations
   // ============================================================================
 
-  async saveTransactions(walletId: string, transactions: TransactionInput[]): Promise<number> {
+  async saveTransactions(
+    walletId: string,
+    transactions: TransactionInput[]
+  ): Promise<number> {
     return invoke<number>('save_transactions', { walletId, transactions })
   }
 
