@@ -64,7 +64,11 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
         onClick={onCancel}
         onKeyDown={handleKeyDown}
       />
-      <ModalContent isDeleting={isDeleting} onCancel={onCancel} onConfirm={onConfirm} />
+      <ModalContent
+        isDeleting={isDeleting}
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+      />
     </div>
   )
 }
@@ -75,7 +79,11 @@ interface ModalContentProps {
   onConfirm: () => void
 }
 
-const ModalContent: React.FC<ModalContentProps> = ({ isDeleting, onCancel, onConfirm }) => (
+const ModalContent: React.FC<ModalContentProps> = ({
+  isDeleting,
+  onCancel,
+  onConfirm,
+}) => (
   <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
     <button
       onClick={onCancel}
@@ -85,7 +93,8 @@ const ModalContent: React.FC<ModalContentProps> = ({ isDeleting, onCancel, onCon
     </button>
     <ModalHeader />
     <p className="text-gray-600 dark:text-gray-300 mb-6">
-      Are you sure you want to delete this entity? All associated data will be permanently removed.
+      Are you sure you want to delete this entity? All associated data will be
+      permanently removed.
     </p>
     <div className="flex justify-end gap-3">
       <button
@@ -111,8 +120,12 @@ const ModalHeader: React.FC = () => (
       <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
     </div>
     <div>
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delete Entity</h3>
-      <p className="text-sm text-gray-500 dark:text-gray-400">This action cannot be undone.</p>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        Delete Entity
+      </h3>
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        This action cannot be undone.
+      </p>
     </div>
   </div>
 )
@@ -132,12 +145,13 @@ const Entities: React.FC = () => {
 
   // Filter and search entities
   const filteredEntities = useMemo(() => {
-    return entities.filter((entity) => {
+    return entities.filter(entity => {
       // Filter by active status
       if (!showInactive && !entity.is_active) return false
 
       // Filter by type
-      if (filterType !== 'all' && entity.entity_type !== filterType) return false
+      if (filterType !== 'all' && entity.entity_type !== filterType)
+        return false
 
       // Search filter
       if (searchQuery) {
@@ -239,7 +253,7 @@ const Entities: React.FC = () => {
             type="text"
             placeholder="Search entities..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -248,7 +262,7 @@ const Entities: React.FC = () => {
         <div className="relative">
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value as EntityType | 'all')}
+            onChange={e => setFilterType(e.target.value as EntityType | 'all')}
             className="appearance-none pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">All Types</option>
@@ -266,7 +280,7 @@ const Entities: React.FC = () => {
           <input
             type="checkbox"
             checked={showInactive}
-            onChange={(e) => setShowInactive(e.target.checked)}
+            onChange={e => setShowInactive(e.target.checked)}
             className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
           />
           Show inactive
@@ -325,7 +339,7 @@ const Entities: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {filteredEntities.map((entity) => (
+              {filteredEntities.map(entity => (
                 <tr
                   key={entity.id}
                   className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${
@@ -387,7 +401,9 @@ const Entities: React.FC = () => {
                     <div className="relative">
                       <button
                         onClick={() =>
-                          setMenuOpenId(menuOpenId === entity.id ? null : entity.id)
+                          setMenuOpenId(
+                            menuOpenId === entity.id ? null : entity.id
+                          )
                         }
                         className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
@@ -409,7 +425,9 @@ const Entities: React.FC = () => {
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50"
                             >
                               <Trash2 className="w-4 h-4" />
-                              {deletingId === entity.id ? 'Deleting...' : 'Delete'}
+                              {deletingId === entity.id
+                                ? 'Deleting...'
+                                : 'Delete'}
                             </button>
                           </div>
                         </div>
