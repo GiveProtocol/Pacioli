@@ -44,28 +44,40 @@ const Register: React.FC = () => {
 
   const passwordStrength = getPasswordStrength(password)
 
-  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
-  }, [])
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setName(e.target.value)
+    },
+    []
+  )
 
-  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-  }, [])
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value)
+    },
+    []
+  )
 
-  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }, [])
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value)
+    },
+    []
+  )
 
-  const handleConfirmPasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value)
-  }, [])
+  const handleConfirmPasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setConfirmPassword(e.target.value)
+    },
+    []
+  )
 
   const toggleShowPassword = useCallback(() => {
-    setShowPassword((prev) => !prev)
+    setShowPassword(prev => !prev)
   }, [])
 
   const toggleShowConfirmPassword = useCallback(() => {
-    setShowConfirmPassword((prev) => !prev)
+    setShowConfirmPassword(prev => !prev)
   }, [])
 
   const handleSubmit = useCallback(
@@ -113,7 +125,9 @@ const Register: React.FC = () => {
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-foreground">Create an account</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            Create an account
+          </h1>
           <p className="mt-2 text-muted-foreground">Get started with Pacioli</p>
         </div>
 
@@ -129,7 +143,10 @@ const Register: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Name Field */}
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-foreground"
+            >
               Full name
             </label>
             <input
@@ -146,7 +163,10 @@ const Register: React.FC = () => {
 
           {/* Email Field */}
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-foreground"
+            >
               Email address
             </label>
             <input
@@ -163,7 +183,10 @@ const Register: React.FC = () => {
 
           {/* Password Field */}
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-foreground"
+            >
               Password
             </label>
             <div className="relative">
@@ -183,7 +206,11 @@ const Register: React.FC = () => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 tabIndex={-1}
               >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
               </button>
             </div>
 
@@ -191,11 +218,13 @@ const Register: React.FC = () => {
             {password && (
               <div className="space-y-1">
                 <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((i) => (
+                  {[1, 2, 3, 4, 5].map(i => (
                     <div
                       key={i}
                       className={`h-1 flex-1 rounded-full ${
-                        i <= passwordStrength.score ? passwordStrength.color : 'bg-muted'
+                        i <= passwordStrength.score
+                          ? passwordStrength.color
+                          : 'bg-muted'
                       }`}
                     />
                   ))}
@@ -231,7 +260,10 @@ const Register: React.FC = () => {
 
           {/* Confirm Password Field */}
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-foreground"
+            >
               Confirm password
             </label>
             <div className="relative">
@@ -255,7 +287,11 @@ const Register: React.FC = () => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 tabIndex={-1}
               >
-                {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                {showConfirmPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
               </button>
             </div>
             {confirmPassword && password !== confirmPassword && (

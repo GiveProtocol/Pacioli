@@ -19,18 +19,25 @@ const Login: React.FC = () => {
   const [localError, setLocalError] = useState<string | null>(null)
 
   // Get the redirect path from location state
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/'
+  const from =
+    (location.state as { from?: { pathname: string } })?.from?.pathname || '/'
 
-  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-  }, [])
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value)
+    },
+    []
+  )
 
-  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }, [])
+  const handlePasswordChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value)
+    },
+    []
+  )
 
   const toggleShowPassword = useCallback(() => {
-    setShowPassword((prev) => !prev)
+    setShowPassword(prev => !prev)
   }, [])
 
   const handleSubmit = useCallback(
@@ -67,7 +74,9 @@ const Login: React.FC = () => {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold text-foreground">Welcome back</h1>
-          <p className="mt-2 text-muted-foreground">Sign in to your Pacioli account</p>
+          <p className="mt-2 text-muted-foreground">
+            Sign in to your Pacioli account
+          </p>
         </div>
 
         {/* Error Alert */}
@@ -82,7 +91,10 @@ const Login: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-foreground"
+            >
               Email address
             </label>
             <input
@@ -100,7 +112,10 @@ const Login: React.FC = () => {
           {/* Password Field */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium text-foreground">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-foreground"
+              >
                 Password
               </label>
               <Link
@@ -128,7 +143,11 @@ const Login: React.FC = () => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 tabIndex={-1}
               >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
               </button>
             </div>
           </div>
