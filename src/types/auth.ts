@@ -16,7 +16,11 @@ export type { UserRole }
 /**
  * User status in the system
  */
-export type UserStatus = 'active' | 'inactive' | 'locked' | 'pending_verification'
+export type UserStatus =
+  | 'active'
+  | 'inactive'
+  | 'locked'
+  | 'pending_verification'
 
 /**
  * Authentication user from the database
@@ -256,20 +260,41 @@ export type Permission =
  * Role permission mapping
  */
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
-  'user': ['view'],
-  'preparer': ['view', 'create', 'edit', 'export'],
-  'approver': ['view', 'create', 'edit', 'approve', 'export', 'view_audit'],
-  'admin': ['view', 'create', 'edit', 'delete', 'approve', 'manage_users', 'export', 'import', 'view_audit'],
+  user: ['view'],
+  preparer: ['view', 'create', 'edit', 'export'],
+  approver: ['view', 'create', 'edit', 'approve', 'export', 'view_audit'],
+  admin: [
+    'view',
+    'create',
+    'edit',
+    'delete',
+    'approve',
+    'manage_users',
+    'export',
+    'import',
+    'view_audit',
+  ],
   'system-admin': [
-    'view', 'create', 'edit', 'delete', 'approve',
-    'manage_users', 'manage_profile', 'export', 'import', 'view_audit'
-  ]
+    'view',
+    'create',
+    'edit',
+    'delete',
+    'approve',
+    'manage_users',
+    'manage_profile',
+    'export',
+    'import',
+    'view_audit',
+  ],
 }
 
 /**
  * Check if a role has a specific permission
  */
-export function hasPermission(role: UserRole | undefined | null, permission: Permission): boolean {
+export function hasPermission(
+  role: UserRole | undefined | null,
+  permission: Permission
+): boolean {
   if (!role) return false
   return ROLE_PERMISSIONS[role]?.includes(permission) ?? false
 }
@@ -277,7 +302,9 @@ export function hasPermission(role: UserRole | undefined | null, permission: Per
 /**
  * Check if a role can perform an action on transactions
  */
-export function canApproveTransactions(role: UserRole | undefined | null): boolean {
+export function canApproveTransactions(
+  role: UserRole | undefined | null
+): boolean {
   return hasPermission(role, 'approve')
 }
 
@@ -402,7 +429,11 @@ export interface AuthError {
 /**
  * Create an auth error
  */
-export function createAuthError(code: AuthErrorCode, message: string, details?: Record<string, unknown>): AuthError {
+export function createAuthError(
+  code: AuthErrorCode,
+  message: string,
+  details?: Record<string, unknown>
+): AuthError {
   return { code, message, details }
 }
 
@@ -412,7 +443,10 @@ export function createAuthError(code: AuthErrorCode, message: string, details?: 
 export function parseAuthError(error: unknown): AuthError {
   if (typeof error === 'string') {
     // Parse common backend error messages
-    if (error.includes('Invalid credentials') || error.includes('Invalid email or password')) {
+    if (
+      error.includes('Invalid credentials') ||
+      error.includes('Invalid email or password')
+    ) {
       return createAuthError('INVALID_CREDENTIALS', 'Invalid email or password')
     }
     if (error.includes('User not found')) {
@@ -425,7 +459,10 @@ export function parseAuthError(error: unknown): AuthError {
       return createAuthError('USER_INACTIVE', 'Account is inactive')
     }
     if (error.includes('Email already registered')) {
-      return createAuthError('EMAIL_ALREADY_EXISTS', 'Email is already registered')
+      return createAuthError(
+        'EMAIL_ALREADY_EXISTS',
+        'Email is already registered'
+      )
     }
     if (error.includes('Password must')) {
       return createAuthError('WEAK_PASSWORD', error)
@@ -439,8 +476,14 @@ export function parseAuthError(error: unknown): AuthError {
     if (error.includes('Invitation') && error.includes('expired')) {
       return createAuthError('INVITATION_EXPIRED', 'Invitation has expired')
     }
-    if (error.includes('Permission denied') || error.includes('not authorized')) {
-      return createAuthError('INSUFFICIENT_PERMISSIONS', 'You do not have permission to perform this action')
+    if (
+      error.includes('Permission denied') ||
+      error.includes('not authorized')
+    ) {
+      return createAuthError(
+        'INSUFFICIENT_PERMISSIONS',
+        'You do not have permission to perform this action'
+      )
     }
 
     return createAuthError('UNKNOWN_ERROR', error)
