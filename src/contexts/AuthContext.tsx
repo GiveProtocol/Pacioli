@@ -237,7 +237,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsAuthenticated(true)
       setUserProfiles([])
       setCurrentProfileRole(null)
-    } catch (err) {
+    } catch (err: unknown) {
       const authError = parseAuthError(err)
       setError(authError.message)
       throw err

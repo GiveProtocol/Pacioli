@@ -93,26 +93,26 @@ export function isWalletInstalled(provider: WalletProvider): boolean {
     case 'polkadot-js':
       return (
         typeof window !== 'undefined' &&
-        !!(window as any).injectedWeb3?.['polkadot-js']
+        !!(window as unknown).injectedWeb3?.['polkadot-js']
       )
     case 'subwallet':
       return (
         typeof window !== 'undefined' &&
-        !!(window as any).injectedWeb3?.['subwallet-js']
+        !!(window as unknown).injectedWeb3?.['subwallet-js']
       )
     case 'talisman':
       return (
         typeof window !== 'undefined' &&
-        !!(window as any).injectedWeb3?.['talisman']
+        !!(window as unknown).injectedWeb3?.['talisman']
       )
     case 'nova':
       return (
         typeof window !== 'undefined' &&
-        !!(window as any).injectedWeb3?.['nova-wallet']
+        !!(window as unknown).injectedWeb3?.['nova-wallet']
       )
     case 'metamask':
       return (
-        typeof window !== 'undefined' && !!(window as any).ethereum?.isMetaMask
+        typeof window !== 'undefined' && !!(window as unknown).ethereum?.isMetaMask
       )
     case 'walletconnect':
       return true // WalletConnect is always "available" as a protocol
@@ -150,9 +150,9 @@ export function getWalletExtensionsByType(
 export async function getSubstrateAccounts(
   provider: WalletProvider
 ): Promise<WalletAccount[]> {
-  const injectedWeb3 = (window as any).injectedWeb3
+  const injectedWeb3 = (window as unknown).injectedWeb3
 
-  let extension: any
+  let extension: unknown
   switch (provider) {
     case 'polkadot-js':
       extension = injectedWeb3?.['polkadot-js']
@@ -180,7 +180,7 @@ export async function getSubstrateAccounts(
   // Get accounts
   const accounts = await enabledExtension.accounts.get()
 
-  return accounts.map((account: any) => ({
+  return accounts.map((account: unknown) => ({
     address: account.address,
     name: account.name || 'Unknown Account',
     source: provider,
@@ -196,9 +196,9 @@ export async function signSubstrateMessage(
   address: string,
   message: string
 ): Promise<string> {
-  const injectedWeb3 = (window as any).injectedWeb3
+  const injectedWeb3 = (window as unknown).injectedWeb3
 
-  let extension: any
+  let extension: unknown
   switch (provider) {
     case 'polkadot-js':
       extension = injectedWeb3?.['polkadot-js']
@@ -240,7 +240,7 @@ export async function signSubstrateMessage(
  * Get accounts from MetaMask
  */
 export async function getMetaMaskAccounts(): Promise<WalletAccount[]> {
-  const ethereum = (window as any).ethereum
+  const ethereum = (window as unknown).ethereum
 
   if (!ethereum?.isMetaMask) {
     throw new Error('MetaMask not found')
