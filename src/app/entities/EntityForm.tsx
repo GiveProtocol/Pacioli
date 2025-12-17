@@ -29,9 +29,18 @@ const taxDocStatuses: { value: TaxDocumentationStatus; label: string }[] = [
   { value: 'expired', label: 'Expired' },
 ]
 
-const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) => {
-  const { createEntity, updateEntity, getEntityAddresses, addEntityAddress, removeEntityAddress } =
-    useEntity()
+const EntityForm: React.FC<EntityFormProps> = ({
+  entity,
+  onClose,
+  onSuccess,
+}) => {
+  const {
+    createEntity,
+    updateEntity,
+    getEntityAddresses,
+    addEntityAddress,
+    removeEntityAddress,
+  } = useEntity()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -68,14 +77,14 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
   // Handlers for new address form (using useCallback to avoid recreating on each render)
   const handleNewAddressChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setNewAddress((prev) => ({ ...prev, address: e.target.value }))
+      setNewAddress(prev => ({ ...prev, address: e.target.value }))
     },
     []
   )
 
   const handleNewAddressChainChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setNewAddress((prev) => ({ ...prev, chain: e.target.value }))
+      setNewAddress(prev => ({ ...prev, chain: e.target.value }))
     },
     []
   )
@@ -122,12 +131,15 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
   }, [entity, loadAddresses])
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value, type } = e.target
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+      [name]:
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }))
   }
 
@@ -184,7 +196,7 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
         },
         entity.id
       )
-      setAddresses((prev) => [added, ...prev])
+      setAddresses(prev => [added, ...prev])
       setNewAddress({ address: '', chain: 'ethereum', label: '' })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add address')
@@ -194,7 +206,7 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
   const handleRemoveAddress = async (id: string) => {
     try {
       await removeEntityAddress(id)
-      setAddresses((prev) => prev.filter((a) => a.id !== id))
+      setAddresses(prev => prev.filter(a => a.id !== id))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to remove address')
     }
@@ -221,7 +233,9 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
           <div className="p-6 space-y-6">
             {error && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                <p className="text-red-800 dark:text-red-200 text-sm">{error}</p>
+                <p className="text-red-800 dark:text-red-200 text-sm">
+                  {error}
+                </p>
               </div>
             )}
 
@@ -243,7 +257,7 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
                     required
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                   >
-                    {entityTypes.map((type) => (
+                    {entityTypes.map(type => (
                       <option key={type.value} value={type.value}>
                         {type.label}
                       </option>
@@ -298,7 +312,9 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
 
             {/* Contact Info */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Contact</h3>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+                Contact
+              </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -402,7 +418,7 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                   >
-                    {taxDocStatuses.map((status) => (
+                    {taxDocStatuses.map(status => (
                       <option key={status.value} value={status.value}>
                         {status.label}
                       </option>
@@ -515,7 +531,7 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
                   </p>
                 ) : (
                   <div className="space-y-2">
-                    {addresses.map((addr) => (
+                    {addresses.map(addr => (
                       <div
                         key={addr.id}
                         className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700 rounded-lg"
@@ -569,7 +585,9 @@ const EntityForm: React.FC<EntityFormProps> = ({ entity, onClose, onSuccess }) =
                   onChange={handleInputChange}
                   className="rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Active</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  Active
+                </span>
               </label>
             </div>
           </div>
