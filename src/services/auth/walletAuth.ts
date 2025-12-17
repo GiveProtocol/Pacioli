@@ -112,7 +112,8 @@ export function isWalletInstalled(provider: WalletProvider): boolean {
       )
     case 'metamask':
       return (
-        typeof window !== 'undefined' && !!(window as unknown).ethereum?.isMetaMask
+        typeof window !== 'undefined' &&
+        !!(window as unknown).ethereum?.isMetaMask
       )
     case 'walletconnect':
       return true // WalletConnect is always "available" as a protocol
