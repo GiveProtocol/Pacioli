@@ -540,32 +540,32 @@ const Entities: React.FC = () => {
         />
       )}
 
-    {/* Summary */}
-    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-      <span>
-        Showing {filteredEntities.length} of {entities.length} entities
-      </span>
+      {/* Summary */}
+      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+        <span>
+          Showing {filteredEntities.length} of {entities.length} entities
+        </span>
+      </div>
+
+      {/* Entity Form Modal */}
+      {isFormOpen && (
+        <EntityForm
+          entity={editingEntity}
+          onClose={handleFormClose}
+          onSuccess={handleFormSuccess}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {confirmDeleteId && (
+        <DeleteConfirmModal
+          isDeleting={deletingId !== null}
+          onCancel={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+        />
+      )}
     </div>
-
-    {/* Entity Form Modal */}
-    {isFormOpen && (
-      <EntityForm
-        entity={editingEntity}
-        onClose={handleFormClose}
-        onSuccess={handleFormSuccess}
-      />
-    )}
-
-    {/* Delete Confirmation Modal */}
-    {confirmDeleteId && (
-      <DeleteConfirmModal
-        isDeleting={deletingId !== null}
-        onCancel={handleDeleteCancel}
-        onConfirm={handleDeleteConfirm}
-      />
-    )}
-  </div>
-)
+  )
 }
 
 export default Entities
