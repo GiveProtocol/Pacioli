@@ -165,7 +165,9 @@ class IndexedDBAuthService implements AuthService {
 
         // Users store
         if (!db.objectStoreNames.contains(STORES.USERS)) {
-          const userStore = db.createObjectStore(STORES.USERS, { keyPath: 'id' })
+          const userStore = db.createObjectStore(STORES.USERS, {
+            keyPath: 'id',
+          })
           userStore.createIndex('email', 'email', { unique: true })
         }
 
@@ -416,9 +418,9 @@ class IndexedDBAuthService implements AuthService {
     const tokenHash = await hashPassword(refreshTokenValue)
     const tokenStore = await this.getStore(STORES.REFRESH_TOKENS, 'readonly')
     const index = tokenStore.index('token_hash')
-    const storedToken = await this.promisifyRequest<StoredRefreshToken | undefined>(
-      index.get(tokenHash)
-    )
+    const storedToken = await this.promisifyRequest<
+      StoredRefreshToken | undefined
+    >(index.get(tokenHash))
 
     if (!storedToken) {
       throw new Error('Invalid refresh token')
@@ -525,7 +527,10 @@ class IndexedDBAuthService implements AuthService {
     return this.sanitizeUser(updatedUser)
   }
 
-  async changePassword(token: string, input: ChangePasswordInput): Promise<void> {
+  async changePassword(
+    token: string,
+    input: ChangePasswordInput
+  ): Promise<void> {
     const verified = await this.verifyToken(token)
     if (!verified.valid || !verified.user_id) {
       throw new Error('Invalid token')
@@ -633,7 +638,10 @@ class IndexedDBAuthService implements AuthService {
     return []
   }
 
-  async getProfileUsers(_token: string, _profileId: string): Promise<ProfileUser[]> {
+  async getProfileUsers(
+    _token: string,
+    _profileId: string
+  ): Promise<ProfileUser[]> {
     return []
   }
 
@@ -729,7 +737,8 @@ class IndexedDBAuthService implements AuthService {
     await this.promisifyRequest(store.put(updatedUser))
 
     return {
-      message: 'Email updated successfully! (Browser mode: no verification required)',
+      message:
+        'Email updated successfully! (Browser mode: no verification required)',
       expires_at: getNow(),
     }
   }
