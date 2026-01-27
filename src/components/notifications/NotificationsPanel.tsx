@@ -371,7 +371,8 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
           'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400',
         success:
           'bg-green-100 dark:bg-green-900/30 text-[#7a9b6f] dark:text-[#8faf84]',
-        error: 'bg-red-100 dark:bg-red-900/30 text-[#9d6b6b] dark:text-[#b88585]',
+        error:
+          'bg-red-100 dark:bg-red-900/30 text-[#9d6b6b] dark:text-[#b88585]',
       }
       return styles[severity]
     },
