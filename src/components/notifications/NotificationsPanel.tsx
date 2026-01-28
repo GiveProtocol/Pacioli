@@ -43,7 +43,12 @@ interface NotificationItemProps {
 }
 
 // Map notification class to UI filter tabs
-type FilterType = 'all' | 'financial' | 'transactional' | 'workflow' | 'approval'
+type FilterType =
+  | 'all'
+  | 'financial'
+  | 'transactional'
+  | 'workflow'
+  | 'approval'
 
 /**
  * Maps a notification class to the corresponding UI filter tab.
@@ -475,7 +480,9 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
               className="p-2 text-[#a39d94] hover:text-[#696557] dark:hover:text-[#b8b3ac] rounded-lg hover:bg-[#ede8e0] dark:hover:bg-[#1a1815]"
               title="Refresh"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`}
+              />
             </button>
             {unreadCount > 0 && (
               <button

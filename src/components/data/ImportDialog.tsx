@@ -5,7 +5,11 @@
 
 import React, { useState, useCallback } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
-import { storage, type ImportPreview, type ImportResult } from '../../services/storage'
+import {
+  storage,
+  type ImportPreview,
+  type ImportResult,
+} from '../../services/storage'
 
 interface ImportDialogProps {
   isOpen: boolean

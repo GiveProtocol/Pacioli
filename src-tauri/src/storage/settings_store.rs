@@ -34,7 +34,10 @@ pub async fn get_setting(pool: &SqlitePool, key: &str) -> Result<Option<String>>
 ///
 /// # Returns
 /// The deserialized value if found and valid, None otherwise
-pub async fn get_setting_json<T: DeserializeOwned>(pool: &SqlitePool, key: &str) -> Result<Option<T>> {
+pub async fn get_setting_json<T: DeserializeOwned>(
+    pool: &SqlitePool,
+    key: &str,
+) -> Result<Option<T>> {
     let value = get_setting(pool, key).await?;
 
     match value {
