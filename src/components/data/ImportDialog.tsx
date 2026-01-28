@@ -5,7 +5,11 @@
 
 import React, { useState, useCallback } from 'react'
 import { open } from '@tauri-apps/plugin-dialog'
-import { storage, type ImportPreview, type ImportResult } from '../../services/storage'
+import {
+  storage,
+  type ImportPreview,
+  type ImportResult,
+} from '../../services/storage'
 
 interface ImportDialogProps {
   isOpen: boolean
@@ -277,7 +281,7 @@ export const ImportDialog: React.FC<ImportDialogProps> = ({
                     Warnings:
                   </p>
                   <ul className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
-                    {result.warnings.map((warning) => (
+                    {result.warnings.map(warning => (
                       <li key={warning}>• {warning}</li>
                     ))}
                   </ul>
