@@ -10,29 +10,29 @@ This plan details the implementation of multi-chain wallet connection functional
 
 ### What Already Exists
 
-| Component | Status | Location |
-|-----------|--------|----------|
-| Substrate wallet connection | Complete | `src/services/wallet/walletService.ts` |
-| EVM (MetaMask) connection | Complete | `src/services/wallet/walletService.ts` |
-| Challenge-based auth | Complete | `src/services/auth/walletAuth.ts` |
-| Signature verification (Rust) | Complete | `src-tauri/src/api/wallet_auth.rs` |
-| Database schema | Complete | `migrations/001_wallet_system_schema.sql` |
-| Wallet UI component | Complete | `src/components/wallet/WalletConnector.tsx` |
-| Wallet aliases | Complete | `src/contexts/WalletAliasContext.tsx` |
-| Type definitions | Complete | `src/services/wallet/types.ts` |
+| Component                     | Status   | Location                                    |
+| ----------------------------- | -------- | ------------------------------------------- |
+| Substrate wallet connection   | Complete | `src/services/wallet/walletService.ts`      |
+| EVM (MetaMask) connection     | Complete | `src/services/wallet/walletService.ts`      |
+| Challenge-based auth          | Complete | `src/services/auth/walletAuth.ts`           |
+| Signature verification (Rust) | Complete | `src-tauri/src/api/wallet_auth.rs`          |
+| Database schema               | Complete | `migrations/001_wallet_system_schema.sql`   |
+| Wallet UI component           | Complete | `src/components/wallet/WalletConnector.tsx` |
+| Wallet aliases                | Complete | `src/contexts/WalletAliasContext.tsx`       |
+| Type definitions              | Complete | `src/services/wallet/types.ts`              |
 
 ### What Needs Implementation
 
-| Component | Priority | Effort |
-|-----------|----------|--------|
-| Bitcoin address validation & signing | High | Medium |
-| Solana address validation & signing | High | Medium |
-| WalletConnect v2 upgrade | High | Medium |
-| Manual address entry flow | High | Low |
-| Verification message UI | High | Low |
-| Wallet management tab | Medium | Medium |
-| Additional EVM L2 chains | Medium | Low |
-| Hardware wallet support | Low | High |
+| Component                            | Priority | Effort |
+| ------------------------------------ | -------- | ------ |
+| Bitcoin address validation & signing | High     | Medium |
+| Solana address validation & signing  | High     | Medium |
+| WalletConnect v2 upgrade             | High     | Medium |
+| Manual address entry flow            | High     | Low    |
+| Verification message UI              | High     | Low    |
+| Wallet management tab                | Medium   | Medium |
+| Additional EVM L2 chains             | Medium   | Low    |
+| Hardware wallet support              | Low      | High   |
 
 ---
 
@@ -54,6 +54,7 @@ Features:
 ```
 
 **Subtasks**:
+
 - [ ] Create modal shell with tab navigation
 - [ ] Implement "Add Wallet" tab with blockchain selector
 - [ ] Add address input with real-time validation
@@ -71,11 +72,12 @@ Features:
 const blockchainGroups = {
   'Substrate Chains': ['polkadot', 'kusama', 'moonbeam', 'astar'],
   'Ethereum & L2s': ['ethereum', 'arbitrum', 'optimism', 'base', 'polygon'],
-  'Other Chains': ['bitcoin', 'solana']
-};
+  'Other Chains': ['bitcoin', 'solana'],
+}
 ```
 
 **Subtasks**:
+
 - [ ] Create grouped dropdown component
 - [ ] Add chain icons for each network
 - [ ] Implement keyboard navigation
@@ -87,16 +89,20 @@ const blockchainGroups = {
 
 ```typescript
 interface ValidationResult {
-  isValid: boolean;
-  normalizedAddress: string;
-  addressType?: string; // e.g., 'bech32', 'legacy', 'ss58'
-  error?: string;
+  isValid: boolean
+  normalizedAddress: string
+  addressType?: string // e.g., 'bech32', 'legacy', 'ss58'
+  error?: string
 }
 
-function validateAddress(address: string, blockchain: BlockchainType): ValidationResult
+function validateAddress(
+  address: string,
+  blockchain: BlockchainType
+): ValidationResult
 ```
 
 **Subtasks**:
+
 - [ ] Implement Substrate SS58 validation (existing @polkadot/util-crypto)
 - [ ] Implement Ethereum checksum validation (existing ethers)
 - [ ] Implement Bitcoin address validation (needs bitcoinjs-lib)
@@ -115,6 +121,7 @@ function generateVerificationMessage(
 ```
 
 **Subtasks**:
+
 - [ ] Create message template with address, timestamp, nonce
 - [ ] Format appropriately for each blockchain's signing standard
 - [ ] Store pending verifications in local state
@@ -130,11 +137,13 @@ function generateVerificationMessage(
 **File**: `src-tauri/src/api/wallet_auth.rs` (extend)
 
 **Dependencies to add** (Cargo.toml):
+
 ```toml
 bitcoin = "0.31"
 ```
 
 **Subtasks**:
+
 - [ ] Add Bitcoin address format validation (P2PKH, P2SH, Bech32, Bech32m)
 - [ ] Implement Bitcoin Signed Message verification
 - [ ] Add unit tests for Bitcoin signatures
@@ -145,12 +154,14 @@ bitcoin = "0.31"
 **File**: `src-tauri/src/api/wallet_auth.rs` (extend)
 
 **Dependencies to add** (Cargo.toml):
+
 ```toml
 solana-sdk = "1.17"
 bs58 = "0.5"
 ```
 
 **Subtasks**:
+
 - [ ] Add Solana address validation (base58 public key)
 - [ ] Implement ED25519 signature verification
 - [ ] Add unit tests for Solana signatures
@@ -170,6 +181,7 @@ pub async fn verify_wallet_signature(
 ```
 
 **Subtasks**:
+
 - [ ] Create blockchain type dispatcher
 - [ ] Implement consistent error handling
 - [ ] Add rate limiting for verification attempts
@@ -187,26 +199,31 @@ pub async fn verify_wallet_signature(
 
 ```typescript
 interface WalletConnectionContextType {
-  wallets: Wallet[];
-  isLoading: boolean;
-  error: string | null;
+  wallets: Wallet[]
+  isLoading: boolean
+  error: string | null
 
   // Manual flow
-  addManualWallet: (address: string, blockchain: string, label?: string) => Promise<Wallet>;
-  verifyWallet: (walletId: string, signature: string) => Promise<boolean>;
+  addManualWallet: (
+    address: string,
+    blockchain: string,
+    label?: string
+  ) => Promise<Wallet>
+  verifyWallet: (walletId: string, signature: string) => Promise<boolean>
 
   // WalletConnect flow
-  connectWalletConnect: () => Promise<Wallet[]>;
-  disconnectWalletConnect: () => Promise<void>;
+  connectWalletConnect: () => Promise<Wallet[]>
+  disconnectWalletConnect: () => Promise<void>
 
   // Management
-  removeWallet: (id: string) => Promise<void>;
-  updateWalletLabel: (id: string, label: string) => Promise<void>;
-  refreshWallets: () => Promise<void>;
+  removeWallet: (id: string) => Promise<void>
+  updateWalletLabel: (id: string, label: string) => Promise<void>
+  refreshWallets: () => Promise<void>
 }
 ```
 
 **Subtasks**:
+
 - [ ] Create context provider
 - [ ] Implement Tauri invoke calls for each method
 - [ ] Add optimistic updates for better UX
@@ -225,15 +242,14 @@ export const walletCommands = {
   verifyWallet: (address: string, signature: string, message: string) =>
     invoke<boolean>('verify_wallet_signature', { address, signature, message }),
 
-  getWallets: () =>
-    invoke<Wallet[]>('get_all_wallets'),
+  getWallets: () => invoke<Wallet[]>('get_all_wallets'),
 
-  removeWallet: (id: string) =>
-    invoke<boolean>('remove_wallet', { id }),
-};
+  removeWallet: (id: string) => invoke<boolean>('remove_wallet', { id }),
+}
 ```
 
 **Subtasks**:
+
 - [ ] Create typed wrapper functions
 - [ ] Add error transformation
 - [ ] Implement retry logic for transient failures
@@ -253,6 +269,7 @@ Features:
 ```
 
 **Subtasks**:
+
 - [ ] Create table component with sorting
 - [ ] Implement inline label editing
 - [ ] Add confirmation dialog for removal
@@ -270,11 +287,13 @@ Features:
 **File**: `src/services/wallet/walletConnectService.ts`
 
 **Dependencies**:
+
 ```bash
 pnpm add @walletconnect/sign-client @walletconnect/modal
 ```
 
 **Subtasks**:
+
 - [ ] Initialize SignClient with project ID
 - [ ] Configure required namespaces (polkadot, eip155, solana)
 - [ ] Implement QR code modal display
@@ -298,6 +317,7 @@ Features:
 ```
 
 **Subtasks**:
+
 - [ ] Create connection initiation UI
 - [ ] Implement QR code display
 - [ ] Show connection progress states
@@ -307,6 +327,7 @@ Features:
 #### Task 4.3: Auto-Save WalletConnect Addresses
 
 **Subtasks**:
+
 - [ ] On successful connection, save all addresses to database
 - [ ] Mark as verified (WalletConnect proves ownership)
 - [ ] Generate appropriate labels
@@ -331,6 +352,7 @@ Per-blockchain instructions:
 ```
 
 **Subtasks**:
+
 - [ ] Create collapsible instruction panels
 - [ ] Add wallet-specific screenshots/icons
 - [ ] Include "Copy message" button
@@ -342,15 +364,16 @@ Per-blockchain instructions:
 
 ```typescript
 interface AddressDisplayProps {
-  address: string;
-  blockchain: BlockchainType;
-  truncate?: boolean;
-  showCopy?: boolean;
-  showExplorer?: boolean;
+  address: string
+  blockchain: BlockchainType
+  truncate?: boolean
+  showCopy?: boolean
+  showExplorer?: boolean
 }
 ```
 
 **Subtasks**:
+
 - [ ] Create truncation with hover to reveal full
 - [ ] Add copy-to-clipboard functionality
 - [ ] Add blockchain explorer links
@@ -359,6 +382,7 @@ interface AddressDisplayProps {
 #### Task 5.3: Error Handling & Feedback
 
 **Subtasks**:
+
 - [ ] Create user-friendly error messages
 - [ ] Add success animations/toasts
 - [ ] Implement form validation feedback
@@ -367,6 +391,7 @@ interface AddressDisplayProps {
 #### Task 5.4: Accessibility
 
 **Subtasks**:
+
 - [ ] Add ARIA labels to all interactive elements
 - [ ] Ensure keyboard navigation works
 - [ ] Test with screen reader
@@ -488,12 +513,12 @@ ALTER TABLE wallets ADD COLUMN IF NOT EXISTS blockchain_type TEXT;
 
 ## Risk Mitigation
 
-| Risk | Mitigation |
-|------|------------|
-| Bitcoin signing support limited | Provide clear guidance on supported wallets; focus on address validation for MVP |
-| WalletConnect project ID required | Register at cloud.walletconnect.com; use env variable |
-| Solana SDK large bundle size | Consider lazy loading; tree-shake unused modules |
-| Hardware wallet complexity | Defer to Phase 2; focus on software wallets first |
+| Risk                              | Mitigation                                                                       |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| Bitcoin signing support limited   | Provide clear guidance on supported wallets; focus on address validation for MVP |
+| WalletConnect project ID required | Register at cloud.walletconnect.com; use env variable                            |
+| Solana SDK large bundle size      | Consider lazy loading; tree-shake unused modules                                 |
+| Hardware wallet complexity        | Defer to Phase 2; focus on software wallets first                                |
 
 ---
 

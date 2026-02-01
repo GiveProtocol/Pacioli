@@ -20,7 +20,10 @@ import {
 } from '../../services/blockchain/polkadotService'
 import { indexedDBService } from '../../services/database/indexedDBService'
 import { MigrationService } from '../../services/database/migrationService'
-import { StorageService, type TrackedWallet } from '../../services/database/storageService'
+import {
+  StorageService,
+  type TrackedWallet,
+} from '../../services/database/storageService'
 import {
   NetworkType,
   type ConnectedWallet,
@@ -100,28 +103,31 @@ const WalletManager: React.FC = () => {
   }, [])
 
   // Handle adding a tracked wallet
-  const handleAddTrackedWallet = useCallback((wallet: {
-    address: string
-    blockchain: string
-    label?: string
-    isVerified: boolean
-    signature?: string
-  }) => {
-    try {
-      const newWallet = StorageService.addTrackedWallet({
-        address: wallet.address,
-        blockchain: wallet.blockchain,
-        label: wallet.label,
-        isVerified: wallet.isVerified,
-        signature: wallet.signature,
-      })
-      setTrackedWallets(prev => [...prev, newWallet])
-      console.log('Wallet tracked successfully:', newWallet)
-    } catch (error) {
-      console.error('Failed to track wallet:', error)
-      alert(error instanceof Error ? error.message : 'Failed to track wallet')
-    }
-  }, [])
+  const handleAddTrackedWallet = useCallback(
+    (wallet: {
+      address: string
+      blockchain: string
+      label?: string
+      isVerified: boolean
+      signature?: string
+    }) => {
+      try {
+        const newWallet = StorageService.addTrackedWallet({
+          address: wallet.address,
+          blockchain: wallet.blockchain,
+          label: wallet.label,
+          isVerified: wallet.isVerified,
+          signature: wallet.signature,
+        })
+        setTrackedWallets(prev => [...prev, newWallet])
+        console.log('Wallet tracked successfully:', newWallet)
+      } catch (error) {
+        console.error('Failed to track wallet:', error)
+        alert(error instanceof Error ? error.message : 'Failed to track wallet')
+      }
+    },
+    []
+  )
 
   // Handle removing a tracked wallet
   const handleRemoveTrackedWallet = useCallback((id: string) => {
@@ -131,29 +137,36 @@ const WalletManager: React.FC = () => {
   }, [])
 
   // Handle adding a portfolio from the AddPortfolioModal
-  const handleAddPortfolio = useCallback((portfolio: {
-    address: string
-    chains: string[]
-    label?: string
-    isXpub?: boolean
-  }) => {
-    try {
-      // Add wallet for each selected chain
-      for (const chain of portfolio.chains) {
-        const newWallet = StorageService.addTrackedWallet({
-          address: portfolio.address,
-          blockchain: chain,
-          label: portfolio.label || (portfolio.isXpub ? 'xPub Portfolio' : undefined),
-          isVerified: false, // Read-only mode, no verification
-        })
-        setTrackedWallets(prev => [...prev, newWallet])
+  const handleAddPortfolio = useCallback(
+    (portfolio: {
+      address: string
+      chains: string[]
+      label?: string
+      isXpub?: boolean
+    }) => {
+      try {
+        // Add wallet for each selected chain
+        for (const chain of portfolio.chains) {
+          const newWallet = StorageService.addTrackedWallet({
+            address: portfolio.address,
+            blockchain: chain,
+            label:
+              portfolio.label ||
+              (portfolio.isXpub ? 'xPub Portfolio' : undefined),
+            isVerified: false, // Read-only mode, no verification
+          })
+          setTrackedWallets(prev => [...prev, newWallet])
+        }
+        console.log('Portfolio added successfully:', portfolio)
+      } catch (error) {
+        console.error('Failed to add portfolio:', error)
+        alert(
+          error instanceof Error ? error.message : 'Failed to add portfolio'
+        )
       }
-      console.log('Portfolio added successfully:', portfolio)
-    } catch (error) {
-      console.error('Failed to add portfolio:', error)
-      alert(error instanceof Error ? error.message : 'Failed to add portfolio')
-    }
-  }, [])
+    },
+    []
+  )
 
   // Wallet aliases
   const { formatWalletDisplay } = useWalletAliases()
@@ -522,7 +535,9 @@ const WalletManager: React.FC = () => {
             >
               <Plus className="w-5 h-5" />
               Add
-              <ChevronDown className={`w-4 h-4 transition-transform ${showAddMenu ? 'rotate-180' : ''}`} />
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${showAddMenu ? 'rotate-180' : ''}`}
+              />
             </button>
 
             {showAddMenu && (
@@ -636,8 +651,18 @@ const WalletManager: React.FC = () => {
                         className="ml-2 p-1 text-gray-400 hover:text-red-500 transition-colors"
                         title="Remove wallet"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
