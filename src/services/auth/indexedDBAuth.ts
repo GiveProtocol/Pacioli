@@ -693,8 +693,10 @@ class IndexedDBAuthService implements AuthService {
     Promise.reject(new Error('Invitations not supported in browser mode'))
 
   /** Revoke invitation (no-op in browser mode) */
-  static revokeInvitation = (_token: string, _invitationId: string): Promise<void> =>
-    Promise.resolve()
+  static revokeInvitation = (
+    _token: string,
+    _invitationId: string
+  ): Promise<void> => Promise.resolve()
 
   // Email change - simplified for browser mode (direct update, no email verification)
   async requestEmailChange(
@@ -753,17 +755,17 @@ class IndexedDBAuthService implements AuthService {
 
   /** Verify email change (no-op in browser mode, email updated directly) */
   static verifyEmailChange(_verificationToken: string): Promise<string> {
-    return Promise.resolve('Email already updated (browser mode)');
+    return Promise.resolve('Email already updated (browser mode)')
   }
 
   /** Cancel email change (no-op in browser mode) */
   static cancelEmailChange(_cancellationToken: string): Promise<string> {
-    return Promise.resolve('No pending email change (browser mode)');
+    return Promise.resolve('No pending email change (browser mode)')
   }
 
   /** Get email change status (no-op in browser mode) */
   static getEmailChangeStatus(_token: string): Promise<EmailChangeStatus> {
-    return Promise.resolve({ pending: false });
+    return Promise.resolve({ pending: false })
   }
 }
 
