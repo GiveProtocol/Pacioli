@@ -646,17 +646,17 @@ class IndexedDBAuthService implements AuthService {
   // Profile roles - stub implementations for browser mode
 
   /** Get user profiles (no-op in browser mode) */
-  getUserProfiles = (_token: string): Promise<ProfileWithRole[]> =>
+  static getUserProfiles = (_token: string): Promise<ProfileWithRole[]> =>
     Promise.resolve([])
 
   /** Get profile users (no-op in browser mode) */
-  getProfileUsers = (
+  static getProfileUsers = (
     _token: string,
     _profileId: string
   ): Promise<ProfileUser[]> => Promise.resolve([])
 
   /** Update user role (no-op in browser mode) */
-  updateUserRole = (
+  static updateUserRole = (
     _token: string,
     _profileId: string,
     _userId: string,
@@ -664,36 +664,36 @@ class IndexedDBAuthService implements AuthService {
   ): Promise<void> => Promise.resolve()
 
   /** Remove user from profile (no-op in browser mode) */
-  removeUserFromProfile = (
+  static removeUserFromProfile = (
     _token: string,
     _profileId: string,
     _userId: string
   ): Promise<void> => Promise.resolve()
 
-  // Invitations - stub implementations for browser mode
+  // Invitations - stub implementations in browser mode
 
   /** Create invitation (not supported in browser mode) */
-  createInvitation = (
+  static createInvitation = (
     _token: string,
     _input: CreateInvitationInput
   ): Promise<Invitation> =>
     Promise.reject(new Error('Invitations not supported in browser mode'))
 
   /** Get profile invitations (no-op in browser mode) */
-  getProfileInvitations = (
+  static getProfileInvitations = (
     _token: string,
     _profileId: string
   ): Promise<Invitation[]> => Promise.resolve([])
 
   /** Accept invitation (not supported in browser mode) */
-  acceptInvitation = (
+  static acceptInvitation = (
     _invitationToken: string,
     _accessToken?: string
   ): Promise<AuthResponse> =>
     Promise.reject(new Error('Invitations not supported in browser mode'))
 
   /** Revoke invitation (no-op in browser mode) */
-  revokeInvitation = (_token: string, _invitationId: string): Promise<void> =>
+  static revokeInvitation = (_token: string, _invitationId: string): Promise<void> =>
     Promise.resolve()
 
   // Email change - simplified for browser mode (direct update, no email verification)
@@ -752,16 +752,19 @@ class IndexedDBAuthService implements AuthService {
   }
 
   /** Verify email change (no-op in browser mode, email updated directly) */
-  verifyEmailChange = (_verificationToken: string): Promise<string> =>
-    Promise.resolve('Email already updated (browser mode)')
+  static verifyEmailChange(_verificationToken: string): Promise<string> {
+    return Promise.resolve('Email already updated (browser mode)');
+  }
 
   /** Cancel email change (no-op in browser mode) */
-  cancelEmailChange = (_cancellationToken: string): Promise<string> =>
-    Promise.resolve('No pending email change (browser mode)')
+  static cancelEmailChange(_cancellationToken: string): Promise<string> {
+    return Promise.resolve('No pending email change (browser mode)');
+  }
 
   /** Get email change status (no-op in browser mode) */
-  getEmailChangeStatus = (_token: string): Promise<EmailChangeStatus> =>
-    Promise.resolve({ pending: false })
+  static getEmailChangeStatus(_token: string): Promise<EmailChangeStatus> {
+    return Promise.resolve({ pending: false });
+  }
 }
 
 export const indexedDBAuthService = new IndexedDBAuthService()

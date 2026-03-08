@@ -76,7 +76,7 @@ class WalletConnectService {
   /**
    * Check if WalletConnect is properly configured
    */
-  isConfigured(): boolean {
+  static isConfigured(): boolean {
     return Boolean(PROJECT_ID)
   }
 
@@ -212,7 +212,7 @@ class WalletConnectService {
     }
   }
 
-  private parseAccounts(
+  private static parseAccounts(
     namespaces: Record<string, { accounts: string[] }>
   ): WalletConnectAccount[] {
     const accounts: WalletConnectAccount[] = []
@@ -405,7 +405,7 @@ class WalletConnectService {
   /**
    * Get chain display name from chain ID
    */
-  getChainName(chain: string): string {
+  static getChainName(chain: string): string {
     const chainNames: Record<string, string> = {
       'eip155:1': 'Ethereum',
       'eip155:137': 'Polygon',
