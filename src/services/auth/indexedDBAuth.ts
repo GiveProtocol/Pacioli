@@ -660,8 +660,10 @@ class IndexedDBAuthService implements AuthService {
     Promise.reject(new Error('Invitations not supported in browser mode'))
 
   /** Revoke invitation (no-op in browser mode) */
-  static revokeInvitation = (_token: string, _invitationId: string): Promise<void> =>
-    Promise.resolve()
+  static revokeInvitation = (
+    _token: string,
+    _invitationId: string
+  ): Promise<void> => Promise.resolve()
 
   // Email change - simplified for browser mode (direct update, no email verification)
   async requestEmailChange(
