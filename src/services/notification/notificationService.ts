@@ -389,7 +389,7 @@ class NotificationService {
   /**
    * Check if a notification should be created based on preferences
    */
-  private shouldCreateNotification(
+  private static shouldCreateNotification(
     input: CreateNotificationInput,
     preferences: NotificationPreferences
   ): boolean {
